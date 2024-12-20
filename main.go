@@ -105,7 +105,7 @@ func realMain() int {
 	// 2. Check for command line errors.
 
 	if flag.NArg() > 0 {
-		return printUsageErrorf("Arguments without flags present: '%s'\n", flag.Args())
+		return printUsageErrorf("Arguments without flags present: %s\n", flag.Args())
 	}
 
 	flag.Visit(visitOptions)
