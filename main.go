@@ -66,7 +66,7 @@ func realMain() int {
 	// 1. Define command line flags.
 
 	var hashTypeName string
-	flag.StringVar(&hashTypeName, `hash`, `sha-3-256`, "name of `hash type`")
+	flag.StringVar(&hashTypeName, `hash`, `sha3-256`, "name of `hash type`")
 
 	var source string
 	flag.StringVar(&source, `source`, ``, "Source `text` (mutually exclusive with 'file')")
@@ -138,7 +138,7 @@ func realMain() int {
 		useHex = true
 	}
 
-	hashFunc, ok := hashimplementation.NewHashFunctionOfType(hashTypeName)
+	normalizedHashTypeName, hashFunc, ok := hashimplementation.NewHashFunctionOfType(hashTypeName)
 	if !ok {
 		return printUsageErrorf(`Invalid hash type: '%s'`, hashTypeName)
 	}
@@ -151,6 +151,11 @@ func realMain() int {
 	}
 
 	// 4. Print result.
+
+	if !noHeader {
+		fmt.Print(`Hash  : `)
+	}
+	fmt.Println(normalizedHashTypeName)
 
 	if useHex {
 		if !noHeader {

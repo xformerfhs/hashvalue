@@ -51,13 +51,15 @@ var hashTypeMap = make(map[string]func() hash.Hash)
 // ******** Public functions ********
 
 // NewHashFunctionOfType creates a hash function from the hash type name.
-func NewHashFunctionOfType(hashTypeName string) (hash.Hash, bool) {
-	hashCreationFunction, ok := hashTypeMap[strings.ToLower(strings.TrimSpace(hashTypeName))]
+func NewHashFunctionOfType(hashTypeName string) (string, hash.Hash, bool) {
+	normalizedHashTypeName := strings.ToLower(strings.TrimSpace(hashTypeName))
+
+	hashCreationFunction, ok := hashTypeMap[normalizedHashTypeName]
 
 	if ok {
-		return hashCreationFunction(), ok
+		return normalizedHashTypeName, hashCreationFunction(), ok
 	} else {
-		return nil, ok
+		return normalizedHashTypeName, nil, ok
 	}
 }
 
