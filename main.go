@@ -81,10 +81,10 @@ func realMain() int {
 	flag.StringVar(&prefix, `prefix`, ``, "Prefix `text` in front of hex bytes")
 
 	var useLower bool
-	flag.BoolVar(&useLower, `lower`, false, `Use lower case for hex output (default)`)
+	flag.BoolVar(&useLower, `lower`, false, `Use lower case for hex output`)
 
 	var useUpper bool
-	flag.BoolVar(&useUpper, `upper`, false, `Use upper case for hex output`)
+	flag.BoolVar(&useUpper, `upper`, false, `Use upper case for hex output (default)`)
 
 	var useBase32 bool
 	flag.BoolVar(&useBase32, `base32`, false, `Encode hash in base32 format (combinable with 'hex' and 'base64')'`)
@@ -131,7 +131,7 @@ func realMain() int {
 	}
 
 	if !(useLower || useUpper) {
-		useLower = true
+		useUpper = true
 	}
 
 	if !(useBase32 || useBase64 || useHex) {
