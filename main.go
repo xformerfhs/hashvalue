@@ -66,34 +66,34 @@ func realMain() int {
 	// 1. Define command line flags.
 
 	var hashTypeName string
-	flag.StringVar(&hashTypeName, `type`, `sha-3-256`, "`hash type`")
+	flag.StringVar(&hashTypeName, `hash`, `sha-3-256`, "name of `hash type`")
 
 	var source string
-	flag.StringVar(&source, `source`, ``, "`source`")
+	flag.StringVar(&source, `source`, ``, "Source `text` (mutually exclusive with 'file')")
 
 	var fileName string
-	flag.StringVar(&fileName, `file`, ``, "`file name`")
+	flag.StringVar(&fileName, `file`, ``, "Name of `source file` (mutually exclusive with 'source')")
 
 	var separator string
-	flag.StringVar(&separator, `separator`, ``, "`hex separator`")
+	flag.StringVar(&separator, `separator`, ``, "Separator `text` between hex bytes")
 
 	var prefix string
-	flag.StringVar(&prefix, `prefix`, ``, "`hex prefix`")
+	flag.StringVar(&prefix, `prefix`, ``, "Prefix `text` in front of hex bytes")
 
 	var useLower bool
-	flag.BoolVar(&useLower, `lower`, false, `use lower case for hex output (default)`)
+	flag.BoolVar(&useLower, `lower`, false, `Use lower case for hex output (default)`)
 
 	var useUpper bool
-	flag.BoolVar(&useUpper, `upper`, false, `use upper case for hex output`)
+	flag.BoolVar(&useUpper, `upper`, false, `Use upper case for hex output`)
 
 	var useBase32 bool
-	flag.BoolVar(&useBase32, `base32`, false, `Encode hash in base32 format`)
+	flag.BoolVar(&useBase32, `base32`, false, `Encode hash in base32 format (combinable with 'hex' and 'base64')'`)
 
 	var useBase64 bool
-	flag.BoolVar(&useBase64, `base64`, false, `Encode hash in base64 format`)
+	flag.BoolVar(&useBase64, `base64`, false, `Encode hash in base64 format (combinable with 'hex' and 'base32')`)
 
 	var useHex bool
-	flag.BoolVar(&useHex, `hex`, false, `Encode hash in hex format (default, with 'separator', 'prefix' and either 'lower' or 'upper')`)
+	flag.BoolVar(&useHex, `hex`, false, `Encode hash in hex format (default, modifiable with 'separator', 'prefix' and either 'lower' or 'upper', combinable with 'base32' and 'base64')`)
 
 	var noHeader bool
 	flag.BoolVar(&noHeader, `noheader`, false, `Do not print the type of the encoding in front of it`)
@@ -179,10 +179,9 @@ func realMain() int {
 // MyUsage is the function that is called by flag.Usage. It prints the usage information.
 func MyUsage() {
 	errWriter := flag.CommandLine.Output()
-	_, _ = fmt.Fprintln(errWriter)
-	_, _ = fmt.Fprintf(errWriter, "Usage of %s:\n", filehelper.GetRealBaseName(os.Args[0]))
+	_, _ = fmt.Fprintf(errWriter, "\nUse '%s' with the following options:\n\n", filehelper.GetRealBaseName(os.Args[0]))
 	flag.PrintDefaults()
-	_, _ = fmt.Fprintf(errWriter, "\nValid hash names: %s\n", hashimplementation.KnownHashNames())
+	_, _ = fmt.Fprintf(errWriter, "\nValid hash type names: %s\n", hashimplementation.KnownHashNames())
 }
 
 // ******** Private function ********
