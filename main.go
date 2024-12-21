@@ -44,12 +44,20 @@ func main() {
 	os.Exit(realMain())
 }
 
+// ******** Private constants ********
+
 // These are the possible return codes of [realMain].
 const (
 	rcOK               = 0
 	rcParameterError   = 1
 	rcpProcessingError = 2
 )
+
+// maxHexParameterLen is the maximum length for a hex formatting parameter.
+const maxHexParameterLen = 8
+
+// parameterTooLongErrorFormat is the format to use for "parameter too long" errors.
+const parameterTooLongErrorFormat = `%s is too long`
 
 // ******** Private variables ********
 
@@ -124,6 +132,14 @@ func realMain() int {
 
 	if haveFile && len(fileName) == 0 {
 		return printUsageError(`File name is empty`)
+	}
+
+	if len(separator) > maxHexParameterLen {
+		return printUsageErrorf(parameterTooLongErrorFormat, `separator`)
+	}
+
+	if len(prefix) > maxHexParameterLen {
+		return printUsageErrorf(parameterTooLongErrorFormat, `prefix`)
 	}
 
 	if useLower && useUpper {
