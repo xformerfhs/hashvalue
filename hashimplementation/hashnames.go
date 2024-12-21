@@ -44,7 +44,7 @@ import (
 
 // ******** Private variables ********
 
-// hashTypeMap maps the hash type name to the hash function.
+// hashTypeMap maps the hash type name to the hash creation function.
 var hashTypeMap = make(map[string]func() hash.Hash)
 
 // ******** Public functions ********
