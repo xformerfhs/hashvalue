@@ -52,11 +52,8 @@ var hashTypeMap = make(map[string]func() hash.Hash)
 // NewHashFunctionOfType creates a hash function from the hash type name.
 func NewHashFunctionOfType(hashTypeName string) (hash.Hash, bool) {
 	hashFunc, ok := hashTypeMap[strings.ToLower(strings.TrimSpace(hashTypeName))]
-	if ok {
-		return hashFunc(), true
-	} else {
-		return nil, false
-	}
+
+	return hashFunc(), ok
 }
 
 // KnownHashNames returns an array of valid known names.
