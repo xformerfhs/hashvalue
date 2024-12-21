@@ -138,8 +138,8 @@ func realMain() int {
 		useHex = true
 	}
 
-	hashFunc := hashimplementation.NewHashFunctionOfType(hashTypeName)
-	if hashFunc == nil {
+	hashFunc, ok := hashimplementation.NewHashFunctionOfType(hashTypeName)
+	if !ok {
 		return printUsageErrorf(`Invalid hash type: '%s'`, hashTypeName)
 	}
 

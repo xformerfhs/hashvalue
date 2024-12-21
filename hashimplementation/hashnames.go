@@ -50,12 +50,12 @@ var hashTypeMap = make(map[string]func() hash.Hash)
 // ******** Public functions ********
 
 // NewHashFunctionOfType creates a hash function from the hash type name.
-func NewHashFunctionOfType(hashTypeName string) hash.Hash {
+func NewHashFunctionOfType(hashTypeName string) (hash.Hash, bool) {
 	hashFunc, ok := hashTypeMap[strings.ToLower(strings.TrimSpace(hashTypeName))]
 	if ok {
-		return hashFunc()
+		return hashFunc(), true
 	} else {
-		return nil
+		return nil, false
 	}
 }
 
@@ -67,13 +67,17 @@ func KnownHashNames() []string {
 	}
 
 	sort.Strings(result)
-	
+
 	return result
 }
 
 // -------- Hash helper functions --------
 // These helpers encapsulate the strange interface of the Blake2x functions
 // to look like the interface of the other hash functions.
+// The only error that can be returned is a "key too long" error, which can not
+// happen here, as there is no key.
+// A proper interface would have had two different "New" functions. One for the hash
+// and one for the MAC.
 
 // NewBlake2b_256 creates a Blake2b-256 hash function.
 func NewBlake2b_256() hash.Hash {
