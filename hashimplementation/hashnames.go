@@ -20,10 +20,11 @@
 //
 // Author: Frank Schwab
 //
-// Version: 1.0.0
+// Version: 2.0.0
 //
 // Change history:
 //    2024-12-20: V1.0.0: Created.
+//    2024-12-21: V2.0.0: Make Blake2x creation functions private.
 //
 
 // Package hashimplementation implements the interface to the hash functions.
@@ -72,44 +73,6 @@ func KnownHashNames() []string {
 	return result
 }
 
-// -------- Hash helper functions --------
-// These helpers encapsulate the strange interface of the Blake2x functions
-// to look like the interface of the other hash functions.
-// The only error that can be returned is a "key too long" error, which can not
-// happen here, as there is no key.
-// A proper interface would have had two different "New" functions. One for the hash
-// and one for the MAC.
-
-// NewBlake2b_256 creates a Blake2b-256 hash function.
-func NewBlake2b_256() hash.Hash {
-	hashFunc, _ := blake2b.New256(nil)
-	return hashFunc
-}
-
-// NewBlake2b_384 creates a Blake2b-384 hash function.
-func NewBlake2b_384() hash.Hash {
-	hashFunc, _ := blake2b.New384(nil)
-	return hashFunc
-}
-
-// NewBlake2b_512 creates a Blake2b-512 hash function.
-func NewBlake2b_512() hash.Hash {
-	hashFunc, _ := blake2b.New512(nil)
-	return hashFunc
-}
-
-// NewBlake2s_128 creates a Blake2s-128 hash function.
-func NewBlake2s_128() hash.Hash {
-	hashFunc, _ := blake2s.New128(nil)
-	return hashFunc
-}
-
-// NewBlake2s_256 creates a Blake2s-256 hash function.
-func NewBlake2s_256() hash.Hash {
-	hashFunc, _ := blake2s.New256(nil)
-	return hashFunc
-}
-
 // ******** Private functions ********
 
 // init is the package initialization function.
@@ -125,9 +88,47 @@ func init() {
 	hashTypeMap[`sha3-256`] = sha3.New256
 	hashTypeMap[`sha3-384`] = sha3.New384
 	hashTypeMap[`sha3-512`] = sha3.New512
-	hashTypeMap[`blake2b-256`] = NewBlake2b_256
-	hashTypeMap[`blake2b-384`] = NewBlake2b_384
-	hashTypeMap[`blake2b-512`] = NewBlake2b_512
-	hashTypeMap[`blake2s-128`] = NewBlake2s_128
-	hashTypeMap[`blake2s-256`] = NewBlake2s_256
+	hashTypeMap[`blake2b-256`] = newBlake2b_256
+	hashTypeMap[`blake2b-384`] = newBlake2b_384
+	hashTypeMap[`blake2b-512`] = newBlake2b_512
+	hashTypeMap[`blake2s-128`] = newBlake2s_128
+	hashTypeMap[`blake2s-256`] = newBlake2s_256
+}
+
+// -------- Hash helper functions --------
+// These helpers encapsulate the strange interface of the Blake2x functions
+// to look like the interface of the other hash functions.
+// The only error that can be returned is a "key too long" error, which can not
+// happen here, as there is no key.
+// A proper interface would have had two different "New" functions. One for the hash
+// and one for the MAC.
+
+// newBlake2b_256 creates a Blake2b-256 hash function.
+func newBlake2b_256() hash.Hash {
+	hashFunc, _ := blake2b.New256(nil)
+	return hashFunc
+}
+
+// newBlake2b_384 creates a Blake2b-384 hash function.
+func newBlake2b_384() hash.Hash {
+	hashFunc, _ := blake2b.New384(nil)
+	return hashFunc
+}
+
+// newBlake2b_512 creates a Blake2b-512 hash function.
+func newBlake2b_512() hash.Hash {
+	hashFunc, _ := blake2b.New512(nil)
+	return hashFunc
+}
+
+// newBlake2s_128 creates a Blake2s-128 hash function.
+func newBlake2s_128() hash.Hash {
+	hashFunc, _ := blake2s.New128(nil)
+	return hashFunc
+}
+
+// newBlake2s_256 creates a Blake2s-256 hash function.
+func newBlake2s_256() hash.Hash {
+	hashFunc, _ := blake2s.New256(nil)
+	return hashFunc
 }
