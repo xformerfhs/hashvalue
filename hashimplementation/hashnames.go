@@ -64,7 +64,7 @@ func NewHashFunctionOfType(hashTypeName string) (hash.Hash, bool) {
 // KnownHashNames returns an array of valid known names.
 func KnownHashNames() []string {
 	result := make([]string, 0, len(hashTypeMap))
-	for name, _ := range hashTypeMap {
+	for name := range hashTypeMap {
 		result = append(result, name)
 	}
 
@@ -85,6 +85,7 @@ func init() {
 	hashTypeMap[`sha2-512`] = sha512.New
 	hashTypeMap[`sha2-512_224`] = sha512.New512_224
 	hashTypeMap[`sha2-512_256`] = sha512.New512_256
+	hashTypeMap[`sha3-224`] = sha3.New224
 	hashTypeMap[`sha3-256`] = sha3.New256
 	hashTypeMap[`sha3-384`] = sha3.New384
 	hashTypeMap[`sha3-512`] = sha3.New512
