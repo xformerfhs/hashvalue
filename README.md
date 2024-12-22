@@ -59,23 +59,23 @@ When the output hash is only a part of the calculated hash, this is separated by
 
 The list of supported hash algorithms is as follows:
 
-- blake2b-256 
-- blake2b-384
-- blake2b-512 
-- blake2s-128 
-- blake2s-256 
-- md5 
-- sha1 
-- sha2-224 
-- sha2-256
-- sha2-384
-- sha2-512
-- sha2-512_224
-- sha2-512_256
-- sha3-224
-- sha3-256
-- sha3-384
-- sha3-512
+- `blake2b-256`
+- `blake2b-384`
+- `blake2b-512`
+- `blake2s-128`
+- `blake2s-256`
+- `md5`
+- `sha1`
+- `sha2-224`
+- `sha2-256`
+- `sha2-384`
+- `sha2-512`
+- `sha2-512_224`
+- `sha2-512_256`
+- `sha3-224`
+- `sha3-256`
+- `sha3-384`
+- `sha3-512`
 
 If the program is called without arguments or with wrong arguments a usage text is printed.
 
