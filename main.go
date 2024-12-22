@@ -74,13 +74,13 @@ func realMain() int {
 	// 1. Define command line flags.
 
 	var hashTypeName string
-	flag.StringVar(&hashTypeName, `hash`, `sha3-256`, "name of `hash type`")
+	flag.StringVar(&hashTypeName, `hash`, `sha3-256`, "name of hash `algorithm`")
 
 	var source string
 	flag.StringVar(&source, `source`, ``, "Source `text` (mutually exclusive with 'file')")
 
 	var fileName string
-	flag.StringVar(&fileName, `file`, ``, "Name of `source file` (mutually exclusive with 'source')")
+	flag.StringVar(&fileName, `file`, ``, "Source file `path` (mutually exclusive with 'source')")
 
 	var separator string
 	flag.StringVar(&separator, `separator`, ``, "Separator `text` between hex bytes")
@@ -94,6 +94,9 @@ func realMain() int {
 	var useUpper bool
 	flag.BoolVar(&useUpper, `upper`, false, `Use upper case for hex output (default)`)
 
+	var useBase16 bool
+	flag.BoolVar(&useBase16, `base16`, false, `Encode hash in base16 (hex) format (combinable with 'hex' and 'base64')'`)
+
 	var useBase32 bool
 	flag.BoolVar(&useBase32, `base32`, false, `Encode hash in base32 format (combinable with 'hex' and 'base64')'`)
 
@@ -101,10 +104,10 @@ func realMain() int {
 	flag.BoolVar(&useBase64, `base64`, false, `Encode hash in base64 format (combinable with 'hex' and 'base32')`)
 
 	var useHex bool
-	flag.BoolVar(&useHex, `hex`, false, `Encode hash in hex format (default, modifiable with 'separator', 'prefix' and either 'lower' or 'upper', combinable with 'base32' and 'base64')`)
+	flag.BoolVar(&useHex, `hex`, false, `Encode hash in hex (base16) format (default, modifiable with 'separator', 'prefix' and either 'lower' or 'upper', combinable with 'base32' and 'base64')`)
 
-	var noHeader bool
-	flag.BoolVar(&noHeader, `noheader`, false, `Do not print the type of the encoding in front of it`)
+	var noHeaders bool
+	flag.BoolVar(&noHeaders, `noheaders`, false, `Do not print the type of the output in front of it`)
 
 	flag.Usage = MyUsage
 
@@ -150,6 +153,10 @@ func realMain() int {
 		useUpper = true
 	}
 
+	if useBase16 {
+		useHex = true
+	}
+
 	if !(useBase32 || useBase64 || useHex) {
 		useHex = true
 	}
@@ -168,27 +175,27 @@ func realMain() int {
 
 	// 4. Print result.
 
-	if !noHeader {
+	if !noHeaders {
 		fmt.Print(`Hash  : `)
 	}
 	fmt.Println(normalizedHashTypeName)
 
 	if useHex {
-		if !noHeader {
+		if !noHeaders {
 			fmt.Print(`Hex   : `)
 		}
 		printHex(hashValue, separator, prefix, useLower)
 	}
 
 	if useBase32 {
-		if !noHeader {
+		if !noHeaders {
 			fmt.Print(`Base32: `)
 		}
 		fmt.Println(base32.StdEncoding.WithPadding(base32.NoPadding).EncodeToString(hashValue))
 	}
 
 	if useBase64 {
-		if !noHeader {
+		if !noHeaders {
 			fmt.Print(`Base64: `)
 		}
 		fmt.Println(base64.StdEncoding.WithPadding(base64.NoPadding).EncodeToString(hashValue))
