@@ -38,6 +38,8 @@ The options have the following meaning:
 | `upper`     | Hexadecimal values `A`-`F` are printed in upper case (default). Only used for `hex` encoding.                   |
 | `noheaders` | Do not print a header before each output line.                                                                  |
 
+The options can be started with either `--` or `-`.
+
 The hash algorithm names consist up to three parts:
 
 1. Algorithm
@@ -84,7 +86,7 @@ If the program is called without arguments or with wrong arguments a usage text 
 In the first example a simple text is hashed:
 
 ```
-hashvalue -source "There should be a meaning."
+hashvalue --source "There should be a meaning."
 ```
 
 This prints the following output:
@@ -101,7 +103,7 @@ The line with the header `Hex` prints the hash value in hex encoding with upper 
 If the headers are not wanted the `noheader` option can be used:
 
 ```
-hashvalue -source "There should be a meaning." --noheaders
+hashvalue --source "There should be a meaning." --noheaders
 ```
 
 This prints the following output:
@@ -116,7 +118,7 @@ It is the same output as before, only without the headers in front of the values
 Now an example with another output encoding:
 
 ```
-hashvalue -source "There should be a meaning." --base32
+hashvalue --source "There should be a meaning." --base32
 ```
 
 This prints the following output:
@@ -132,7 +134,7 @@ The hash value is the same as before.
 It is possible to specifiy multiple output encodings:
 
 ```
-hashvalue -source "There should be a meaning." --base32 --base64
+hashvalue --source "There should be a meaning." --base32 --base64
 ```
 
 This prints the following output:
@@ -148,7 +150,7 @@ The hash value is printed in `base32` and `base64` encoding.
 Now a different hash algorithm is specified:
 
 ```
-hashvalue -source "There should be a meaning." --base32 --base64 --hex --hash blake2b-384
+hashvalue --source "There should be a meaning." --base32 --base64 --hex --hash blake2b-384
 ```
 
 ```
@@ -162,7 +164,7 @@ The hexadecimal out can be modified, so that it can be incorporated in a program
 E.g. if one wants the hash formatted for use in [Go](https://go.dev/), or [Java](https://www.java.com/), this could be specified like this:
 
 ```
-hashvalue -source "There should be a meaning." --hash sha2-256 --hex --prefix 0x --separator ", "  --lower --noheader
+hashvalue --source "There should be a meaning." --hash sha2-256 --hex --prefix 0x --separator ", "  --lower --noheader
 ```
 
 This prints the following output:
