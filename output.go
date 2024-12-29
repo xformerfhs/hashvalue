@@ -34,6 +34,8 @@ import (
 	"fmt"
 )
 
+// ******** Private functions ********
+
 // printResult prints the hash value.
 func printResult(normalizedHashTypeName string, hashValue []byte) {
 	if !noHeaders {

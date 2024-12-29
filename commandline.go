@@ -36,6 +36,16 @@ import (
 	"os"
 )
 
+// ******** Private constants ********
+
+// parameterTooLongErrorFormat is the format to use for "parameter too long" errors.
+const parameterTooLongErrorFormat = `%s is too long`
+
+// maxHexParameterLen is the maximum length for a hex formatting parameter.
+const maxHexParameterLen = 8
+
+// ******** Private functions ********
+
 // defineCommandLineFlags defines the command line flags.
 func defineCommandLineFlags() {
 	flag.StringVar(&hashTypeName, `hash`, `sha3-256`, "name of hash `algorithm`")

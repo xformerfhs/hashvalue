@@ -35,6 +35,8 @@ import (
 	"os"
 )
 
+// ******** Private functions ********
+
 // printUsageError prints an error message and the usage information.
 func printUsageError(msg string) int {
 	errWriter := flag.CommandLine.Output()

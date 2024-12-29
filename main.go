@@ -47,12 +47,6 @@ const (
 	rcpProcessingError = 2
 )
 
-// maxHexParameterLen is the maximum length for a hex formatting parameter.
-const maxHexParameterLen = 8
-
-// parameterTooLongErrorFormat is the format to use for "parameter too long" errors.
-const parameterTooLongErrorFormat = `%s is too long`
-
 // ******** Private variables ********
 
 // Option presence flags.

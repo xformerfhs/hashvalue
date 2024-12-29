@@ -36,6 +36,8 @@ import (
 	"os"
 )
 
+// ******** Private functions ********
+
 // hashData hashes the data in [source] or from file [fileName].
 func hashData(hashFunc hash.Hash, source string, fileName string) ([]byte, error) {
 	var hashValue []byte
