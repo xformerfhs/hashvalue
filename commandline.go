@@ -77,17 +77,17 @@ func myUsage() {
 // checkCommandLineFlags checks the command line flags.
 func checkCommandLineFlags() int {
 	if flag.NArg() > 0 {
-		return printUsageErrorf("Arguments without flags present: %s\n", flag.Args())
+		return printUsageErrorf(`Arguments without flags present: %s`, flag.Args())
 	}
 
 	flag.Visit(visitOptions)
 
 	if haveSource && haveFile {
-		return printUsageError("Do not specify 'source' and 'file'")
+		return printUsageError(`Do not specify 'source' and 'file'`)
 	}
 
 	if !(haveSource || haveFile) {
-		return printUsageError("Specify either 'source' or 'file'")
+		return printUsageError(`Specify either 'source' or 'file'`)
 	}
 
 	if haveSource && len(source) == 0 {
