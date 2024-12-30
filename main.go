@@ -26,7 +26,7 @@
 //    2024-12-20: V1.0.0: Created.
 //    2024-12-29: V1.1.0: Make flags global and modularize code.
 //    2024-12-30: V1.1.1: Show version.
-//    2024-12-30: V1.1.2: Simplify hey byte output.
+//    2024-12-30: V1.1.2: Simplify hex byte output.
 //
 
 package main
