@@ -20,10 +20,11 @@
 //
 // Author: Frank Schwab
 //
-// Version: 1.0.0
+// Version: 1.1.0
 //
 // Change history:
 //    2024-12-29: V1.0.0: Created.
+//    2024-12-30: V1.1.0: Print hex bytes directly and not via fmt.Printf.
 //
 
 package main
@@ -32,7 +33,21 @@ import (
 	"encoding/base32"
 	"encoding/base64"
 	"fmt"
+	"os"
 )
+
+// ******** Private constants ********
+
+// lowerOffset is the offset between lower and upper case characters.
+const lowerOffset byte = 'a' - 'A'
+
+// characterOffset is the offset between a digit character and an alphabetical character.
+const characterOffset byte = 'A' - '0' - 10
+
+// ******** Private variables ********
+
+// hexCharBuffer is the one byte slice that holds the byte to print as a hex character.
+var hexCharBuffer = make([]byte, 1)
 
 // ******** Private functions ********
 
@@ -69,11 +84,9 @@ func printResult(normalizedHashTypeName string, hashValue []byte) {
 // by [separator] and prefixed by [prefix]. The byte values are printed
 // either with lower or upper case characters.
 func printHex(hashValue []byte, separator string, prefix string, useLower bool) {
-	var hexFormat string
+	caseOffset := characterOffset
 	if useLower {
-		hexFormat = `%02x`
-	} else {
-		hexFormat = `%02X`
+		caseOffset += lowerOffset
 	}
 
 	useSeparator := false
@@ -88,8 +101,37 @@ func printHex(hashValue []byte, separator string, prefix string, useLower bool) 
 		if usePrefix {
 			fmt.Print(prefix)
 		}
-		fmt.Printf(hexFormat, b)
+
+		printHexByte(b, caseOffset)
 	}
 
 	fmt.Println()
+}
+
+// printHexByte prints one byte in hexadecimal (base16) encoding.
+func printHexByte(b byte, caseOffset byte) {
+	// Print upper nibble.
+	i := b >> 4
+	printHexChar(i, caseOffset)
+
+	// Print lower nibble.
+	i = b & 0x0f
+	printHexChar(i, caseOffset)
+}
+
+// printHexChar prints one hex character.
+func printHexChar(b byte, caseOffset byte) {
+	// 1. Convert to byte starting at '0'.
+	c := b + '0'
+
+	// 2. If the value is above 9, add the correct offset that starts the byte at 'A' or 'a'.
+	if b > 9 {
+		c += caseOffset
+	}
+
+	// 3. The "Write" function needs a byte slice. So copy character byte to byte slice.
+	hexCharBuffer[0] = c
+
+	// 4. Write the byte to the Stdout writer.
+	_, _ = os.Stdout.Write(hexCharBuffer)
 }

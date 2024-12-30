@@ -20,12 +20,13 @@
 //
 // Author: Frank Schwab
 //
-// Version: 1.1.1
+// Version: 1.1.2
 //
 // Change history:
 //    2024-12-20: V1.0.0: Created.
 //    2024-12-29: V1.1.0: Make flags global and modularize code.
 //    2024-12-30: V1.1.1: Show version.
+//    2024-12-30: V1.1.2: Simplify hey byte output.
 //
 
 package main
@@ -50,7 +51,7 @@ const (
 )
 
 // myVersion contains the current version of this program.
-const myVersion = `1.1.1`
+const myVersion = `1.1.2`
 
 // myCopyright contains the copyright of this program.
 const myCopyright = `Copyright (c) 2024 Frank Schwab`
