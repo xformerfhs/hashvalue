@@ -31,9 +31,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"hashvalue/filehelper"
 	"hashvalue/hashimplementation"
-	"os"
 )
 
 // ******** Private constants ********
@@ -60,6 +58,7 @@ func defineCommandLineFlags() {
 	flag.BoolVar(&useBase64, `base64`, false, `Encode hash in base64 format (combinable with 'hex' and 'base32')`)
 	flag.BoolVar(&useHex, `hex`, false, `Encode hash in hex (base16) format (default, modifiable with 'separator', 'prefix' and either 'lower' or 'upper', combinable with 'base32' and 'base64')`)
 	flag.BoolVar(&noHeaders, `noheaders`, false, `Do not print the type of the output in front of it`)
+	flag.BoolVar(&showVersion, `version`, false, `Show program version and exit`)
 
 	flag.Usage = myUsage
 
@@ -69,7 +68,7 @@ func defineCommandLineFlags() {
 // myUsage is the function that is called by flag.Usage. It prints the usage information.
 func myUsage() {
 	errWriter := flag.CommandLine.Output()
-	_, _ = fmt.Fprintf(errWriter, "\nUse '%s' with the following options:\n\n", filehelper.GetRealBaseName(os.Args[0]))
+	_, _ = fmt.Fprintf(errWriter, "\nUse '%s' with the following options:\n\n", myName)
 	flag.PrintDefaults()
 	_, _ = fmt.Fprintf(errWriter, "\nValid hash type names: %s\n", hashimplementation.KnownHashNames())
 }

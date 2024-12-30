@@ -20,16 +20,18 @@
 //
 // Author: Frank Schwab
 //
-// Version: 1.1.0
+// Version: 1.1.1
 //
 // Change history:
 //    2024-12-20: V1.0.0: Created.
 //    2024-12-29: V1.1.0: Make flags global and modularize code.
+//    2024-12-30: V1.1.1: Show version.
 //
 
 package main
 
 import (
+	"hashvalue/filehelper"
 	"hashvalue/hashimplementation"
 	"os"
 )
@@ -47,7 +49,16 @@ const (
 	rcpProcessingError = 2
 )
 
+// myVersion contains the current version of this program.
+const myVersion = `1.1.1`
+
+// myCopyright contains the copyright of this program.
+const myCopyright = `Copyright (c) 2024 Frank Schwab`
+
 // ******** Private variables ********
+
+// myName contains the name of the current executable.
+var myName string
 
 // Option presence flags.
 
@@ -102,12 +113,23 @@ var useHex bool
 // noHeaders indicates that output should not be prefixed by a header.
 var noHeaders bool
 
+// showVersion indicates that the version information should be printed.
+var showVersion bool
+
 // ******** Private functions ********
 
 // realMain is the real main function that returns a return code.
 func realMain() int {
+	myName = filehelper.GetRealBaseName(os.Args[0])
+
 	// 1. Define command line flags.
 	defineCommandLineFlags()
+
+	// Show version and exit if version is requested.
+	if showVersion {
+		printVersion()
+		return rcOK
+	}
 
 	// 2. Check for command line errors.
 	rc := checkCommandLineFlags()

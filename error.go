@@ -33,6 +33,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"runtime"
 )
 
 // ******** Private functions ********
@@ -71,4 +72,9 @@ func printErrorf(format string, a ...interface{}) int {
 	_, _ = fmt.Fprintf(os.Stderr, format, a...)
 
 	return rcpProcessingError
+}
+
+// printVersion prints the version information for this program.
+func printVersion() {
+	fmt.Printf("\n%s V%s (%s), %s\n", myName, myVersion, runtime.Version(), myCopyright)
 }
