@@ -89,17 +89,20 @@ func printHex(hashValue []byte, separator string, prefix string, useLower bool) 
 		caseOffset += lowerOffset
 	}
 
+	separatorBytes := []byte(separator)
+	prefixBytes := []byte(prefix)
+
 	useSeparator := false
 	usePrefix := len(prefix) != 0
 	for _, b := range hashValue {
 		if useSeparator {
-			fmt.Print(separator)
+			_, _ = os.Stdout.Write(separatorBytes)
 		} else {
 			useSeparator = true
 		}
 
 		if usePrefix {
-			fmt.Print(prefix)
+			_, _ = os.Stdout.Write(prefixBytes)
 		}
 
 		printHexByte(b, caseOffset)

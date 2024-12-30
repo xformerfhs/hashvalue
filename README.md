@@ -37,6 +37,7 @@ The options have the following meaning:
 | `lower`     | Hexadecimal values `A`-`F` are printed in lower case. Only used for `hex` encoding.                             |
 | `upper`     | Hexadecimal values `A`-`F` are printed in upper case (default). Only used for `hex` encoding.                   |
 | `noheaders` | Do not print a header before each output line.                                                                  |
+| `version`   | Print the version information and exit.                                                                         |
 
 The options can be started with either `--` or `-`.
 
