@@ -48,7 +48,7 @@ func hashData(hashFunc hash.Hash, source string, fileName string) ([]byte, error
 		var err error
 		hashValue, err = fileHash(hashFunc, fileName)
 		if err != nil {
-			return nil, fmt.Errorf("error reading file '%s': %w", fileName, err)
+			return nil, fmt.Errorf(`error reading file '%s': %w`, fileName, err)
 		}
 	}
 
