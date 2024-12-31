@@ -71,7 +71,7 @@ func printErrorf(format string, a ...interface{}) int {
 	_, _ = fmt.Fprintln(os.Stderr)
 	_, _ = fmt.Fprintf(os.Stderr, format, a...)
 
-	return rcpProcessingError
+	return rcProcessingError
 }
 
 // printVersion prints the version information for this program.
