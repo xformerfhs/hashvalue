@@ -36,6 +36,14 @@ import (
 	"runtime"
 )
 
+// ******** Private constants ********
+
+const (
+	rcOK              = 0
+	rcParameterError  = 1
+	rcProcessingError = 2
+)
+
 // ******** Private functions ********
 
 // printUsageError prints an error message and the usage information.

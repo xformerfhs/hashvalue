@@ -45,13 +45,6 @@ func main() {
 
 // ******** Private constants ********
 
-// These are the possible return codes of [realMain].
-const (
-	rcOK               = 0
-	rcParameterError   = 1
-	rcpProcessingError = 2
-)
-
 // myVersion contains the current version of this program.
 const myVersion = `1.1.2`
 
