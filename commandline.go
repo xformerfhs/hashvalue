@@ -42,6 +42,64 @@ const parameterTooLongErrorFormat = `%s is too long`
 // maxHexParameterLen is the maximum length for a hex formatting parameter.
 const maxHexParameterLen = 8
 
+// ******** Private variables ********
+
+// Option presence flags.
+
+// haveSource is true if the 'source' option has been set.
+var haveSource = false
+
+// haveFile is true if the 'file' option has been set.
+var haveFile = false
+
+// Option values.
+
+// They have to be global in order to modularize the main program.
+// Otherwise, there would have been an awful lot of parameters to pass to functions.
+
+// hashTypeName is the name of the hash.
+var hashTypeName string
+
+// source is the source text to hash.
+var source string
+
+// fileName is the name of the file whose contents are to be hashed.
+var fileName string
+
+// separator is the separator text for hex output.
+var separator string
+
+// prefix is prefix text for hex output.
+var prefix string
+
+// useLower indicates that lower-case characters should be used for hex output.
+var useLower bool
+
+// useUpper indicates that upper-case characters should be used for hex output.
+// This is a helper flag and is not used for execution control.
+// It is mapped to useLower.
+var useUpper bool
+
+// useBase16 indicates that base16 (hex) encoding should be used for hash output.
+// This is a helper flag and is not used for execution control.
+// It is mapped to useHex.
+var useBase16 bool
+
+// useBase32 indicates that base32 encoding should be used for hash output.
+var useBase32 bool
+
+// useBase64 indicates that base64 encoding should be used for hash output.
+var useBase64 bool
+
+// useHex indicates that hex encoding should be used for hash output.
+var useHex bool
+
+// noHeaders indicates that output should not be prefixed by a header.
+var noHeaders bool
+
+// showVersion indicates that the version information should be printed.
+var showVersion bool
+
 // ******** Private functions ********
 
 // defineCommandLineFlags defines the command line flags.
