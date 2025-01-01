@@ -57,7 +57,7 @@ func printUsageError(msg string) int {
 }
 
 // printUsageErrorf print a formatted error message and the usage information.
-func printUsageErrorf(format string, a ...interface{}) int {
+func printUsageErrorf(format string, a ...any) int {
 	errWriter := flag.CommandLine.Output()
 
 	_, _ = fmt.Fprintln(errWriter)
@@ -75,7 +75,7 @@ func printUsage(errWriter io.Writer) int {
 }
 
 // printErrorf prints a processing error message.
-func printErrorf(format string, a ...interface{}) int {
+func printErrorf(format string, a ...any) int {
 	_, _ = fmt.Fprintln(os.Stderr)
 	_, _ = fmt.Fprintf(os.Stderr, format, a...)
 
