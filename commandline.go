@@ -111,7 +111,7 @@ func defineCommandLineFlags() {
 	flag.StringVar(&prefix, `prefix`, ``, "Prefix `text` in front of hex bytes")
 	flag.BoolVar(&useLower, `lower`, false, `Use lower case for hex output`)
 	flag.BoolVar(&useUpper, `upper`, false, `Use upper case for hex output (default)`)
-	flag.BoolVar(&useBase16, `base16`, false, `Encode hash in base16 (hex) format (combinable with 'hex' and 'base64')'`)
+	flag.BoolVar(&useBase16, `base16`, false, `Encode hash in base16 (hex) format (alias for 'hex')'`)
 	flag.BoolVar(&useBase32, `base32`, false, `Encode hash in base32 format (combinable with 'hex' and 'base64')'`)
 	flag.BoolVar(&useBase64, `base64`, false, `Encode hash in base64 format (combinable with 'hex' and 'base32')`)
 	flag.BoolVar(&useHex, `hex`, false, `Encode hash in hex (base16) format (default, modifiable with 'separator', 'prefix' and either 'lower' or 'upper', combinable with 'base32' and 'base64')`)
