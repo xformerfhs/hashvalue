@@ -42,7 +42,7 @@ import (
 const lowerOffset byte = 'a' - 'A'
 
 // characterOffset is the offset between a digit character and an alphabetical character.
-const characterOffset byte = 'A' - '0' - 10
+const characterOffset byte = 'A' - '9' - 1
 
 // ******** Private variables ********
 
