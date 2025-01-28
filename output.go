@@ -1,5 +1,5 @@
 //
-// SPDX-FileCopyrightText: Copyright 2024 Frank Schwab
+// SPDX-FileCopyrightText: Copyright 2024-2025 Frank Schwab
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -20,11 +20,12 @@
 //
 // Author: Frank Schwab
 //
-// Version: 1.1.0
+// Version: 1.2.0
 //
 // Change history:
 //    2024-12-29: V1.0.0: Created.
 //    2024-12-30: V1.1.0: Print hex bytes directly and not via fmt.Printf.
+//    2025-01-28: V1.2.0: Get rid of "fmt" package.
 //
 
 package main
@@ -32,7 +33,6 @@ package main
 import (
 	"encoding/base32"
 	"encoding/base64"
-	"fmt"
 	"os"
 )
 
@@ -44,6 +44,9 @@ const lowerOffset byte = 'a' - 'A'
 // characterOffset is the offset between a digit character and an alphabetical character.
 const characterOffset byte = 'A' - '9' - 1
 
+// newLine contains a byte slice with the newline character.
+var newLine = []byte{'\n'}
+
 // ******** Private variables ********
 
 // hexCharBuffer is the one byte slice that holds the byte to print as a hex character.
@@ -53,30 +56,31 @@ var hexCharBuffer = make([]byte, 1)
 
 // printResult prints the hash value.
 func printResult(normalizedHashTypeName string, hashValue []byte) {
+	out := os.Stdout
 	if !noHeaders {
-		fmt.Print(`Hash  : `)
+		_, _ = out.WriteString(`Hash  : `)
 	}
-	fmt.Println(normalizedHashTypeName)
+	writeStringln(out, normalizedHashTypeName)
 
 	if useHex {
 		if !noHeaders {
-			fmt.Print(`Hex   : `)
+			_, _ = out.WriteString(`Hex   : `)
 		}
 		printHex(hashValue, separator, prefix, useLower)
 	}
 
 	if useBase32 {
 		if !noHeaders {
-			fmt.Print(`Base32: `)
+			_, _ = out.WriteString(`Base32: `)
 		}
-		fmt.Println(base32.StdEncoding.WithPadding(base32.NoPadding).EncodeToString(hashValue))
+		writeStringln(out, base32.StdEncoding.WithPadding(base32.NoPadding).EncodeToString(hashValue))
 	}
 
 	if useBase64 {
 		if !noHeaders {
-			fmt.Print(`Base64: `)
+			_, _ = out.WriteString(`Base64: `)
 		}
-		fmt.Println(base64.StdEncoding.WithPadding(base64.NoPadding).EncodeToString(hashValue))
+		writeStringln(out, base64.StdEncoding.WithPadding(base32.NoPadding).EncodeToString(hashValue))
 	}
 }
 
@@ -91,24 +95,25 @@ func printHex(hashValue []byte, separator string, prefix string, useLower bool) 
 
 	separatorBytes := []byte(separator)
 	prefixBytes := []byte(prefix)
+	out := os.Stdout
 
 	useSeparator := false
 	usePrefix := len(prefix) != 0
 	for _, b := range hashValue {
 		if useSeparator {
-			_, _ = os.Stdout.Write(separatorBytes)
+			_, _ = out.Write(separatorBytes)
 		} else {
 			useSeparator = true
 		}
 
 		if usePrefix {
-			_, _ = os.Stdout.Write(prefixBytes)
+			_, _ = out.Write(prefixBytes)
 		}
 
 		printHexByte(b, caseOffset)
 	}
 
-	fmt.Println()
+	_, _ = out.Write(newLine)
 }
 
 // printHexByte prints one byte in hexadecimal (base16) encoding.
@@ -137,4 +142,10 @@ func printHexChar(b byte, caseOffset byte) {
 
 	// 4. Write the byte to the Stdout writer.
 	_, _ = os.Stdout.Write(hexCharBuffer)
+}
+
+// writeStringln writes a string followed by a newline character.
+func writeStringln(out *os.File, s string) {
+	_, _ = out.WriteString(s)
+	_, _ = out.Write(newLine)
 }

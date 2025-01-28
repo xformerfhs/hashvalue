@@ -1,5 +1,5 @@
 //
-// SPDX-FileCopyrightText: Copyright 2024 Frank Schwab
+// SPDX-FileCopyrightText: Copyright 2024-2025 Frank Schwab
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -20,13 +20,14 @@
 //
 // Author: Frank Schwab
 //
-// Version: 1.1.2
+// Version: 1.2.0
 //
 // Change history:
 //    2024-12-20: V1.0.0: Created.
 //    2024-12-29: V1.1.0: Make flags global and modularize code.
 //    2024-12-30: V1.1.1: Show version.
 //    2024-12-30: V1.1.2: Simplify hex byte output.
+//    2025-01-28: V1.2.0: Write output directly without the "fmt" package.
 //
 
 package main
@@ -46,10 +47,10 @@ func main() {
 // ******** Private constants ********
 
 // myVersion contains the current version of this program.
-const myVersion = `1.1.2`
+const myVersion = `1.2.0`
 
 // myCopyright contains the copyright of this program.
-const myCopyright = `Copyright (c) 2024 Frank Schwab`
+const myCopyright = `Copyright (c) 2024-2025 Frank Schwab`
 
 // ******** Private variables ********
 
