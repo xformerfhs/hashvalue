@@ -28,7 +28,7 @@
 //    2024-12-30: V1.1.1: Show version.
 //    2024-12-30: V1.1.2: Simplify hex byte output.
 //    2025-01-28: V1.2.0: Write output directly without the "fmt" package.
-//    2025-01-28: V1.3.0: Remove hash "blake2s-256" as it needs a key.
+//    2025-01-28: V1.3.0: Remove hash "blake2s-128" as it needs a key.
 //
 
 package main
