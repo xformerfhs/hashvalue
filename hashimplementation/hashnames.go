@@ -1,5 +1,5 @@
 //
-// SPDX-FileCopyrightText: Copyright 2024 Frank Schwab
+// SPDX-FileCopyrightText: Copyright 2024-2025 Frank Schwab
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -20,11 +20,12 @@
 //
 // Author: Frank Schwab
 //
-// Version: 2.0.0
+// Version: 2.1.0
 //
 // Change history:
 //    2024-12-20: V1.0.0: Created.
 //    2024-12-21: V2.0.0: Make Blake2x creation functions private.
+//    2025-01-28: V2.1.0: Remove "blake2s-128" as it needs a key.
 //
 
 // Package hashimplementation implements the interface to the hash functions.
@@ -94,7 +95,6 @@ func init() {
 	hashTypeMap[`blake2b-256`] = newBlake2b_256
 	hashTypeMap[`blake2b-384`] = newBlake2b_384
 	hashTypeMap[`blake2b-512`] = newBlake2b_512
-	hashTypeMap[`blake2s-128`] = newBlake2s_128
 	hashTypeMap[`blake2s-256`] = newBlake2s_256
 }
 
@@ -121,12 +121,6 @@ func newBlake2b_384() hash.Hash {
 // newBlake2b_512 creates a Blake2b-512 hash function.
 func newBlake2b_512() hash.Hash {
 	hashFunc, _ := blake2b.New512(nil)
-	return hashFunc
-}
-
-// newBlake2s_128 creates a Blake2s-128 hash function.
-func newBlake2s_128() hash.Hash {
-	hashFunc, _ := blake2s.New128(nil)
 	return hashFunc
 }
 
