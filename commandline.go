@@ -1,5 +1,5 @@
 //
-// SPDX-FileCopyrightText: Copyright 2024 Frank Schwab
+// SPDX-FileCopyrightText: Copyright 2024-2025 Frank Schwab
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -20,10 +20,11 @@
 //
 // Author: Frank Schwab
 //
-// Version: 1.0.0
+// Version: 1.1.0
 //
 // Change history:
 //    2024-12-29: V1.0.0: Created.
+//    2025-01-31: V1.1.0: Add Z85 encoding of output.
 //
 
 package main
@@ -91,6 +92,9 @@ var useBase32 bool
 // useBase64 indicates that base64 encoding should be used for hash output.
 var useBase64 bool
 
+// useZ85 indicates that Z85 encoding should be used for hash output.
+var useZ85 bool
+
 // useHex indicates that hex encoding should be used for hash output.
 var useHex bool
 
@@ -112,9 +116,10 @@ func defineCommandLineFlags() {
 	flag.BoolVar(&useLower, `lower`, false, `Use lower case for hex output`)
 	flag.BoolVar(&useUpper, `upper`, false, `Use upper case for hex output (default)`)
 	flag.BoolVar(&useBase16, `base16`, false, `Encode hash in base16 (hex) format (alias for 'hex')`)
-	flag.BoolVar(&useBase32, `base32`, false, `Encode hash in base32 format (combinable with 'hex' and 'base64')`)
-	flag.BoolVar(&useBase64, `base64`, false, `Encode hash in base64 format (combinable with 'hex' and 'base32')`)
-	flag.BoolVar(&useHex, `hex`, false, `Encode hash in hex (base16) format (default, modifiable with 'separator', 'prefix' and either 'lower' or 'upper', combinable with 'base32' and 'base64')`)
+	flag.BoolVar(&useBase32, `base32`, false, `Encode hash in base32 format`)
+	flag.BoolVar(&useBase64, `base64`, false, `Encode hash in base64 format`)
+	flag.BoolVar(&useZ85, `z85`, false, `Encode hash in Z85 format`)
+	flag.BoolVar(&useHex, `hex`, false, `Encode hash in hex (base16) format (default)`)
 	flag.BoolVar(&noHeaders, `noheaders`, false, `Do not print the type of the output in front of it`)
 	flag.BoolVar(&showVersion, `version`, false, `Show program version and exit`)
 
@@ -191,7 +196,7 @@ func normalizeCommandLineFlags() {
 		useHex = true
 	}
 
-	if !(useBase32 || useBase64 || useHex) {
+	if !(useBase32 || useBase64 || useZ85 || useHex) {
 		useHex = true
 	}
 }

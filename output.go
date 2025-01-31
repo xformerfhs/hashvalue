@@ -20,12 +20,13 @@
 //
 // Author: Frank Schwab
 //
-// Version: 1.2.0
+// Version: 1.3.0
 //
 // Change history:
 //    2024-12-29: V1.0.0: Created.
 //    2024-12-30: V1.1.0: Print hex bytes directly and not via fmt.Printf.
 //    2025-01-28: V1.2.0: Get rid of "fmt" package.
+//    2025-01-31: V1.3.0: Add Z85 encoding of output.
 //
 
 package main
@@ -33,6 +34,7 @@ package main
 import (
 	"encoding/base32"
 	"encoding/base64"
+	"hashvalue/z85"
 	"os"
 )
 
@@ -82,11 +84,19 @@ func printResult(normalizedHashTypeName string, hashValue []byte) {
 		}
 		writeStringln(out, base64.StdEncoding.WithPadding(base32.NoPadding).EncodeToString(hashValue))
 	}
+
+	if useZ85 {
+		if !noHeaders {
+			_, _ = out.WriteString(`Z85   : `)
+		}
+		encoded, _ := z85.Encode(hashValue)
+		writeStringln(out, encoded)
+	}
 }
 
 // printHex prints a byte array in hex format where the bytes are separated
-// by [separator] and prefixed by [prefix]. The byte values are printed
-// either with lower or upper case characters.
+// by separator and prefixed by prefix. The byte values are printed either with
+// lower or upper case characters, depending on useLower.
 func printHex(hashValue []byte, separator string, prefix string, useLower bool) {
 	caseOffset := characterOffset
 	if useLower {

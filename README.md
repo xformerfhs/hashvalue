@@ -32,6 +32,7 @@ The options have the following meaning:
 | `base16`    | Alias for `hex`.                                                                                                |
 | `base32`    | Hash value is encoded as a [base32](https://en.wikipedia.org/wiki/Base32) string.                               |
 | `base64`    | Hash value is encoded as a [base64](https://en.wikipedia.org/wiki/Base64) string.                               |
+| `z85`       | Hash value is encoded as a [Z85](https://rfc.zeromq.org/spec/32) string.                                        |
 | `prefix`    | Prefix text for hex encoded bytes.  Only used for `hex` encoding.                                               |
 | `separator` | Separator text for hex encoded bytes. Only used for `hex` encoding.                                             |
 | `lower`     | Hexadecimal values `A`-`F` are printed in lower case. Only used for `hex` encoding.                             |
@@ -65,7 +66,6 @@ The list of supported hash algorithms is as follows:
 - `blake2b-256`
 - `blake2b-384`
 - `blake2b-512`
-- `blake2s-128`
 - `blake2s-256`
 - `md5`
 - `sha1`
@@ -151,7 +151,7 @@ The hash value is printed in `base32` and `base64` encoding.
 Now a different hash algorithm is specified:
 
 ```
-hashvalue --source "There should be a meaning." --base32 --base64 --hex --hash blake2b-384
+hashvalue --source "There should be a meaning." --base32 --base64 --z85 --hex --hash blake2b-384
 ```
 
 ```
@@ -159,6 +159,7 @@ Hash  : blake2b-384
 Hex   : B876FB7EE6E838D74EBBCF391F062240F5540A5E5341AE51353ED04BFADEDEA4E230E5F33CEB994EAB289BD9168D67A1
 Base32: XB3PW7XG5A4NOTV3Z44R6BRCID2VICS6KNA24UJVH3IEX6W632SOEMHF6M6OXGKOVMUJXWIWRVT2C
 Base64: uHb7fuboONdOu885HwYiQPVUCl5TQa5RNT7QS/re3qTiMOXzPOuZTqsom9kWjWeh
+Z85   : Xov:#>ia!Rpp[?j9%J]O]&8o8q:EM-h9PwW}RH88&XoG=jNnzgT0<E<7l8$2
 ```
 
 The hexadecimal out can be modified, so that it can be incorporated in a program source code.
