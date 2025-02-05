@@ -20,18 +20,21 @@
 //
 // Author: Frank Schwab
 //
-// Version: 1.0.0
+// Version: 3.0.0
 //
 // Change history:
 //    2025-01-31: V1.0.0: Created.
+//    2025-02-01: V2.0.0: Return an error on invalid padding for DecodeAndUnpad.
+//    2025-02-02: V3.0.0: Structured errors.
 //
 
 // Package z85 implements Z85 encoding as specified in https://rfc.zeromq.org/spec/32.
+// There are two additional functions that implement a padded variant for sources
+// of lengths that are not a multiple of 4. Theses are _not_ standardized.
 package z85
 
 import (
 	"encoding/binary"
-	"errors"
 	"math"
 )
 
@@ -49,25 +52,25 @@ const byteChunkMask = byteChunkSize - 1
 // byteChunkShift is the shift count for a byte chunk.
 const byteChunkShift = 2
 
-// encodedChunkSize is the size of a encoded chunk.
+// encodedChunkSize is the size of an encoded chunk.
 const encodedChunkSize = 5
 
 // encodeTable is the table used for encoding.
-const encodeTable = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.-:+=^!/*?&<>()[]{}@%$#"
+var encodeTable = `0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.-:+=^!/*?&<>()[]{}@%$#`
 
 // ******** Public functions ********
 
-// Encode encodes slice to a Z85 encoded string.
-// The length of slice must be a multiple of 4.
+// Encode encodes a byte slice into a Z85 encoded string.
+// The length of the slice must be a multiple of 4.
 func Encode(source []byte) (string, error) {
 	sourceLen := len(source)
 
-	if sourceLen > math.MaxInt32/encodedChunkSize {
-		return ``, errors.New(`source data is too large`)
+	if sourceLen > math.MaxInt/encodedChunkSize {
+		return ``, ErrTooLong
 	}
 
 	if (sourceLen & byteChunkMask) != 0 {
-		return ``, errors.New(`source data length must be a multiple of 4`)
+		return ``, ErrInvalidLength(byteChunkSize)
 	}
 
 	result := make([]byte, (sourceLen*encodedChunkSize)>>2)

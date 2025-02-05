@@ -20,32 +20,48 @@
 //
 // Author: Frank Schwab
 //
-// Version: 1.0.0
+// Version: 2.2.0
 //
 // Change history:
 //    2025-01-31: V1.0.0: Created.
+//    2025-02-01: V2.0.0: Use separate package name.
+//    2025-02-01: V2.1.0: Better test cases for padded encoding.
+//    2025-02-02: V2.2.0: Test structured errors.
 //
 
-package z85
+package z85_test
 
-import "testing"
+import (
+	"errors"
+	"hashvalue/z85"
+	"testing"
+)
+
+// ******** Private constants ********
+
+// clearTheOne contains the clear bytes of the one test case on the https://rfc.zeromq.org/spec/32 website.
+var clearTheOne = []byte{0x86, 0x4f, 0xd2, 0x6f, 0xb5, 0x59, 0xf7, 0x5B}
+
+// encodedTheOne contains the encoded string of the one test case on the https://rfc.zeromq.org/spec/32 website.
+var encodedTheOne = `HelloWorld`
+
+// ******** Test functions ********
 
 // TestEncodeTheOne implements the one test case documented on the https://rfc.zeromq.org/spec/32 website.
 func TestEncodeTheOne(t *testing.T) {
-	source := []byte{0x86, 0x4f, 0xd2, 0x6f, 0xb5, 0x59, 0xf7, 0x5B}
-
-	encoded, err := Encode(source)
+	encoded, err := z85.Encode(clearTheOne)
 	if err != nil {
 		t.Fatalf(`Encoding failed: %v`, err)
 	}
 
-	if encoded != `HelloWorld` {
-		t.Fatalf(`Encoding did not result in 'HelloWorld', but '%s'`, encoded)
+	if encoded != encodedTheOne {
+		t.Fatalf(`Encoding did not result in '%s', but '%s'`, encodedTheOne, encoded)
 	}
 }
 
+// TestNilEncode tests the encoding of an empty byte slice.
 func TestNilEncode(t *testing.T) {
-	encoded, err := Encode(nil)
+	encoded, err := z85.Encode(nil)
 	if err != nil {
 		t.Fatalf(`Encoding failed: %v`, err)
 	}
@@ -55,10 +71,16 @@ func TestNilEncode(t *testing.T) {
 	}
 }
 
-func TestInvalidLength(t *testing.T) {
-	source := []byte{0x11, 0x22, 0x33}
-	_, err := Encode(source)
+// TestEncodeWithInvalidLength tests if an error occurs encoding with an invalid length.
+func TestEncodeWithInvalidLength(t *testing.T) {
+	_, err := z85.Encode(clearTheOne[2:5])
 	if err == nil {
 		t.Fatal(`Invalid length did not result in an error`)
+	} else {
+		var expectedErr z85.ErrInvalidLength
+		ok := errors.As(err, &expectedErr)
+		if !ok {
+			t.Fatalf(`Wrong error when encoding invalid length string: '%v'`, err)
+		}
 	}
 }
