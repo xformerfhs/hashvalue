@@ -47,9 +47,6 @@ const byteChunkSize = 4
 // byteChunkMask Mask to check a byte chunk index.
 const byteChunkMask = byteChunkSize - 1
 
-// byteChunkShift is the shift count for a byte chunk.
-const byteChunkShift = 2
-
 // encodedChunkSize is the size of an encoded chunk.
 const encodedChunkSize = 5
 
@@ -71,8 +68,8 @@ func Encode(source []byte) (string, error) {
 		return ``, ErrInvalidLength(byteChunkSize)
 	}
 
-	result := make([]byte, (sourceLen*encodedChunkSize)>>2)
-	chunkCount := sourceLen >> byteChunkShift
+	result := make([]byte, (sourceLen*encodedChunkSize)/byteChunkSize)
+	chunkCount := sourceLen / byteChunkSize
 	destination := result
 	for chunkIndex := 0; chunkIndex < chunkCount; chunkIndex++ {
 		value := binary.BigEndian.Uint32(source[:byteChunkSize])
