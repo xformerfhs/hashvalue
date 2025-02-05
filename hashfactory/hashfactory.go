@@ -41,7 +41,7 @@ import (
 	"golang.org/x/crypto/blake2s"
 	"golang.org/x/crypto/sha3"
 	"hash"
-	"sort"
+	"slices"
 	"strings"
 )
 
@@ -72,7 +72,7 @@ func KnownHashNames() []string {
 		result = append(result, name)
 	}
 
-	sort.Strings(result)
+	slices.Sort(result)
 
 	return result
 }
