@@ -32,7 +32,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"hashvalue/hashimplementation"
+	"hashvalue/hashfactory"
 )
 
 // ******** Private constants ********
@@ -133,7 +133,7 @@ func myUsage() {
 	errWriter := flag.CommandLine.Output()
 	_, _ = fmt.Fprintf(errWriter, "\nUse '%s' with the following options:\n\n", myName)
 	flag.PrintDefaults()
-	_, _ = fmt.Fprintf(errWriter, "\nValid hash type names: %s\n", hashimplementation.KnownHashNames())
+	_, _ = fmt.Fprintf(errWriter, "\nValid hash type names: %s\n", hashfactory.KnownHashNames())
 }
 
 // checkCommandLineFlags checks the command line flags.

@@ -36,7 +36,7 @@ package main
 
 import (
 	"hashvalue/filehelper"
-	"hashvalue/hashimplementation"
+	"hashvalue/hashfactory"
 	"os"
 )
 
@@ -84,7 +84,7 @@ func realMain() int {
 	normalizeCommandLineFlags()
 
 	// 4. Get hash function.
-	normalizedHashTypeName, hashFunc, ok := hashimplementation.NewHashFunctionOfType(hashTypeName)
+	normalizedHashTypeName, hashFunc, ok := hashfactory.New(hashTypeName)
 	if !ok {
 		return printUsageErrorf(`Invalid hash type: '%s'`, hashTypeName)
 	}

@@ -20,16 +20,17 @@
 //
 // Author: Frank Schwab
 //
-// Version: 2.1.0
+// Version: 3.0.0
 //
 // Change history:
 //    2024-12-20: V1.0.0: Created.
 //    2024-12-21: V2.0.0: Make Blake2x creation functions private.
 //    2025-01-28: V2.1.0: Remove "blake2s-128" as it needs a key.
+//    2025-02-05: V3.0.0: New package name.
 //
 
-// Package hashimplementation implements the interface to the hash functions.
-package hashimplementation
+// Package hashfactory implements the hash factory functions.
+package hashfactory
 
 import (
 	"crypto/md5"
@@ -51,8 +52,8 @@ var hashTypeMap = make(map[string]func() hash.Hash)
 
 // ******** Public functions ********
 
-// NewHashFunctionOfType creates a hash function from the hash type name.
-func NewHashFunctionOfType(hashTypeName string) (string, hash.Hash, bool) {
+// New creates a hash function from the hash type name.
+func New(hashTypeName string) (string, hash.Hash, bool) {
 	normalizedHashTypeName := strings.ToLower(strings.TrimSpace(hashTypeName))
 
 	hashCreationFunction, ok := hashTypeMap[normalizedHashTypeName]
