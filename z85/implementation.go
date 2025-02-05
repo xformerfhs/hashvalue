@@ -29,8 +29,6 @@
 //
 
 // Package z85 implements Z85 encoding as specified in https://rfc.zeromq.org/spec/32.
-// There are two additional functions that implement a padded variant for sources
-// of lengths that are not a multiple of 4. Theses are _not_ standardized.
 package z85
 
 import (
