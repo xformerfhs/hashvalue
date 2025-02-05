@@ -26,6 +26,7 @@
 //    2025-01-31: V1.0.0: Created.
 //    2025-02-01: V2.0.0: Return an error on invalid padding for DecodeAndUnpad.
 //    2025-02-02: V3.0.0: Structured errors.
+//    2025-02-05: V3.1.0: Streamlined result size calculation.
 //
 
 // Package z85 implements Z85 encoding as specified in https://rfc.zeromq.org/spec/32.
@@ -46,6 +47,9 @@ const byteChunkSize = 4
 
 // byteChunkMask Mask to check a byte chunk index.
 const byteChunkMask = byteChunkSize - 1
+
+// byteChunkShift is the shift value used for division by shifting.
+const byteChunkShift = 2
 
 // encodedChunkSize is the size of an encoded chunk.
 const encodedChunkSize = 5
@@ -68,8 +72,8 @@ func Encode(source []byte) (string, error) {
 		return ``, ErrInvalidLength(byteChunkSize)
 	}
 
-	result := make([]byte, (sourceLen*encodedChunkSize)/byteChunkSize)
-	chunkCount := sourceLen / byteChunkSize
+	chunkCount := sourceLen >> byteChunkShift
+	result := make([]byte, sourceLen+chunkCount)
 	destination := result
 	for chunkIndex := 0; chunkIndex < chunkCount; chunkIndex++ {
 		value := binary.BigEndian.Uint32(source[:byteChunkSize])
