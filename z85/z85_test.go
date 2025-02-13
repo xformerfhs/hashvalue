@@ -20,13 +20,14 @@
 //
 // Author: Frank Schwab
 //
-// Version: 2.2.0
+// Version: 2.3.0
 //
 // Change history:
 //    2025-01-31: V1.0.0: Created.
 //    2025-02-01: V2.0.0: Use separate package name.
 //    2025-02-01: V2.1.0: Better test cases for padded encoding.
 //    2025-02-02: V2.2.0: Test structured errors.
+//    2025-02-10: V2.3.0: Correct for new type of invalid byte error, fill buffers with random data.
 //
 
 package z85_test

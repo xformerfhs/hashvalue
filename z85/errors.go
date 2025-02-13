@@ -20,10 +20,11 @@
 //
 // Author: Frank Schwab
 //
-// Version: 1.0.0
+// Version: 2.0.0
 //
 // Change history:
 //    2025-02-03: V1.0.0: Created.
+//    2025-02-13: V2.0.0: Change type of invalid byte error, correct type of length error.
 //
 
 package z85
@@ -44,7 +45,7 @@ const invalidLengthMessage = `input length is not a multiple of %d`
 var ErrTooLong = errors.New(`input is too long`)
 
 // ErrInvalidLength means that the input has a length that is not valid for the operation.
-type ErrInvalidLength uint16
+type ErrInvalidLength byte
 
 // Error returns the error message for an invalid length error.
 func (e ErrInvalidLength) Error() string {
