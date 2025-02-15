@@ -1,11 +1,9 @@
 module hashvalue
 
-go 1.24
-
-toolchain go1.24.0
+go 1.23
 
 require (
-	github.com/xformerfhs/z85 v1.0.0
+	github.com/xformerfhs/z85 v1.1.0
 	golang.org/x/crypto v0.33.0
 )
 
