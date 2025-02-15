@@ -34,7 +34,7 @@ package main
 import (
 	"encoding/base32"
 	"encoding/base64"
-	"hashvalue/z85"
+	"github.com/xformerfhs/z85"
 	"os"
 )
 

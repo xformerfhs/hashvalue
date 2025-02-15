@@ -20,7 +20,7 @@
 //
 // Author: Frank Schwab
 //
-// Version: 1.4.1
+// Version: 1.4.2
 //
 // Change history:
 //    2024-12-20: V1.0.0: Created.
@@ -31,6 +31,7 @@
 //    2025-01-28: V1.3.0: Remove hash "blake2s-128" as it needs a key.
 //    2025-01-31: V1.4.0: Add Z85 encoding of output.
 //    2025-02-05: V1.4.1: Simpler Z85 size calculation.
+//    2025-02-15: V1.4.2: Use z85 package from GitHub.
 //
 
 package main
@@ -50,7 +51,7 @@ func main() {
 // ******** Private constants ********
 
 // myVersion contains the current version of this program.
-const myVersion = `1.4.1`
+const myVersion = `1.4.2`
 
 // myCopyright contains the copyright of this program.
 const myCopyright = `Copyright (c) 2024-2025 Frank Schwab`
