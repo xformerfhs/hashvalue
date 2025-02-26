@@ -37,10 +37,12 @@ The options have the following meaning:
 | `separator` | Separator text for hex encoded bytes. Only used for `hex` encoding.                                             |
 | `lower`     | Hexadecimal values `A`-`F` are printed in lower case. Only used for `hex` encoding.                             |
 | `upper`     | Hexadecimal values `A`-`F` are printed in upper case (default). Only used for `hex` encoding.                   |
-| `noheaders` | Do not print a header before each output line.                                                                  |
 | `version`   | Print the version information and exit.                                                                         |
 
 The options can be started with either `--` or `-`.
+
+Specify only one encoding.
+If there is more than one encoding specified an error message is printed.
 
 The hash algorithm names consist up to three parts:
 
@@ -93,28 +95,11 @@ hashvalue --source "There should be a meaning."
 This prints the following output:
 
 ```
-Hash  : sha3-256
-Hex   : 9AFA63F5C5BE4BEFEC3D1499470F255EDEDCE0B02B916564111886DCD72597CD
-```
-
-The line with the header `Hash` prints the name of the used hash algorithm.
-If the algorithm is not specified the default is `sha3-256`.
-The line with the header `Hex` prints the hash value in hex encoding with upper case letters.
-
-If the headers are not wanted the `noheader` option can be used:
-
-```
-hashvalue --source "There should be a meaning." --noheaders
-```
-
-This prints the following output:
-
-```
-sha3-256
 9AFA63F5C5BE4BEFEC3D1499470F255EDEDCE0B02B916564111886DCD72597CD
 ```
 
-It is the same output as before, only without the headers in front of the values.
+If the algorithm is not specified the default is `sha3-256`.
+The hash value is printed in hex encoding with upper case letters, since this is the default if no encoding is specified.
 
 Now an example with another output encoding:
 
@@ -125,54 +110,31 @@ hashvalue --source "There should be a meaning." --base32
 This prints the following output:
 
 ```
-Hash  : sha3-256
-Base32: TL5GH5OFXZF673B5CSMUODZFL3PNZYFQFOIWKZARDCDNZVZFS7GQ
+TL5GH5OFXZF673B5CSMUODZFL3PNZYFQFOIWKZARDCDNZVZFS7GQ
 ```
 
-The hash value is encoded in base32.
-The hash value is the same as before.
-
-It is possible to specifiy multiple output encodings:
-
-```
-hashvalue --source "There should be a meaning." --base32 --base64
-```
-
-This prints the following output:
-
-```
-Hash  : sha3-256
-Base32: TL5GH5OFXZF673B5CSMUODZFL3PNZYFQFOIWKZARDCDNZVZFS7GQ
-Base64: mvpj9cW+S+/sPRSZRw8lXt7c4LArkWVkERiG3Ncll80
-```
-
-The hash value is printed in `base32` and `base64` encoding.
+The hash value is the same as before but now it is printed in base32 encoding.
 
 Now a different hash algorithm is specified:
 
 ```
-hashvalue --source "There should be a meaning." --base32 --base64 --z85 --hex --hash blake2b-384
+hashvalue --source "There should be a meaning." --z85 --hash blake2b-384
 ```
 
 ```
-Hash  : blake2b-384
-Hex   : B876FB7EE6E838D74EBBCF391F062240F5540A5E5341AE51353ED04BFADEDEA4E230E5F33CEB994EAB289BD9168D67A1
-Base32: XB3PW7XG5A4NOTV3Z44R6BRCID2VICS6KNA24UJVH3IEX6W632SOEMHF6M6OXGKOVMUJXWIWRVT2C
-Base64: uHb7fuboONdOu885HwYiQPVUCl5TQa5RNT7QS/re3qTiMOXzPOuZTqsom9kWjWeh
-Z85   : Xov:#>ia!Rpp[?j9%J]O]&8o8q:EM-h9PwW}RH88&XoG=jNnzgT0<E<7l8$2
+Xov:#>ia!Rpp[?j9%J]O]&8o8q:EM-h9PwW}RH88&XoG=jNnzgT0<E<7l8$2
 ```
 
 The hexadecimal out can be modified, so that it can be incorporated in a program source code.
 E.g. if one wants the hash formatted for use in [Go](https://go.dev/), or [Java](https://www.java.com/), this could be specified like this:
 
 ```
-hashvalue --source "There should be a meaning." --hash sha2-256 --hex --prefix 0x --separator ", "  --lower --noheader
+hashvalue --source "There should be a meaning." --hash sha2-256 --hex --prefix 0x --separator ", "  --lower
 ```
 
 This prints the following output:
 
 ```
-sha2-256
 0x23, 0x85, 0xad, 0x7d, 0x11, 0xb1, 0xd8, 0x33, 0x93, 0x4f, 0x9e, 0x29, 0x4b, 0x4a, 0x8b, 0xeb, 0x37, 0x2b, 0xc1, 0x92, 0x40, 0x3f, 0x4e, 0xe4, 0x70, 0xc7, 0x1d, 0xe1, 0xbf, 0x81, 0xf3, 0xab
 ```
 
@@ -185,8 +147,7 @@ hashvalue -file main.go --hash sha3-384 --base32
 This prints the following output:
 
 ```
-Hash  : sha3-384
-Base32: 4KRKAQP4UHQTKMU7T6BZLDIPN4TULQ3WOKR5SCTOIBLRTQH5YRJELPC62FWHI4AEHTGAHIGXEOA7I
+4KRKAQP4UHQTKMU7T6BZLDIPN4TULQ3WOKR5SCTOIBLRTQH5YRJELPC62FWHI4AEHTGAHIGXEOA7I
 ```
 
 ### Return codes

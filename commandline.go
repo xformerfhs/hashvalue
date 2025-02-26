@@ -20,11 +20,12 @@
 //
 // Author: Frank Schwab
 //
-// Version: 1.1.0
+// Version: 2.0.0
 //
 // Change history:
 //    2024-12-29: V1.0.0: Created.
 //    2025-01-31: V1.1.0: Add Z85 encoding of output.
+//    2025-02-26: V2.0.0: No more headers. Allow only one encoding.
 //
 
 package main
@@ -98,9 +99,6 @@ var useZ85 bool
 // useHex indicates that hex encoding should be used for hash output.
 var useHex bool
 
-// noHeaders indicates that output should not be prefixed by a header.
-var noHeaders bool
-
 // showVersion indicates that the version information should be printed.
 var showVersion bool
 
@@ -120,7 +118,6 @@ func defineCommandLineFlags() {
 	flag.BoolVar(&useBase64, `base64`, false, `Encode hash in base64 format`)
 	flag.BoolVar(&useZ85, `z85`, false, `Encode hash in Z85 format`)
 	flag.BoolVar(&useHex, `hex`, false, `Encode hash in hex (base16) format (default)`)
-	flag.BoolVar(&noHeaders, `noheaders`, false, `Do not print the type of the output in front of it`)
 	flag.BoolVar(&showVersion, `version`, false, `Show program version and exit`)
 
 	flag.Usage = myUsage
@@ -133,6 +130,7 @@ func myUsage() {
 	errWriter := flag.CommandLine.Output()
 	_, _ = fmt.Fprintf(errWriter, "\nUse '%s' with the following options:\n\n", myName)
 	flag.PrintDefaults()
+	_, _ = fmt.Fprintln(errWriter, "\nSpecify only one encoding.")
 	_, _ = fmt.Fprintf(errWriter, "\nValid hash type names: %s\n", hashfactory.KnownHashNames())
 }
 
@@ -143,6 +141,10 @@ func checkCommandLineFlags() int {
 	}
 
 	flag.Visit(visitOptions)
+
+	if countTrues(useHex, useBase32, useBase64, useZ85) > 1 {
+		return printUsageError(`More than one encoding specified`)
+	}
 
 	if haveSource && haveFile {
 		return printUsageError(`Do not specify 'source' and 'file'`)
@@ -199,4 +201,16 @@ func normalizeCommandLineFlags() {
 	if !(useBase32 || useBase64 || useZ85 || useHex) {
 		useHex = true
 	}
+}
+
+// countTrues counts the number of arguments that have a value of "true".
+func countTrues(b ...bool) int {
+	result := 0
+	for _, b := range b {
+		if b {
+			result++
+		}
+	}
+
+	return result
 }

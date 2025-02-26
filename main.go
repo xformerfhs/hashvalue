@@ -20,7 +20,7 @@
 //
 // Author: Frank Schwab
 //
-// Version: 1.4.2
+// Version: 2.0.0
 //
 // Change history:
 //    2024-12-20: V1.0.0: Created.
@@ -32,6 +32,7 @@
 //    2025-01-31: V1.4.0: Add Z85 encoding of output.
 //    2025-02-05: V1.4.1: Simpler Z85 size calculation.
 //    2025-02-15: V1.4.2: Use z85 package from GitHub.
+//    2025-02-26: V2.0.0: Just print the value in one encoding. No headers. No multiple encodings.
 //
 
 package main
@@ -51,7 +52,7 @@ func main() {
 // ******** Private constants ********
 
 // myVersion contains the current version of this program.
-const myVersion = `1.4.2`
+const myVersion = `2.0.0`
 
 // myCopyright contains the copyright of this program.
 const myCopyright = `Copyright (c) 2024-2025 Frank Schwab`
@@ -76,17 +77,17 @@ func realMain() int {
 		return rcOK
 	}
 
-	// 2. Check for command line errors.
+	// 2. Normalize command line flags.
+	normalizeCommandLineFlags()
+
+	// 3. Check for command line errors.
 	rc := checkCommandLineFlags()
 	if rc != rcOK {
 		return rc
 	}
 
-	// 3. Normalize command line flags.
-	normalizeCommandLineFlags()
-
 	// 4. Get hash function.
-	normalizedHashTypeName, hashFunc, ok := hashfactory.New(hashTypeName)
+	hashFunc, ok := hashfactory.New(hashTypeName)
 	if !ok {
 		return printUsageErrorf(`Invalid hash type: '%s'`, hashTypeName)
 	}
@@ -98,7 +99,7 @@ func realMain() int {
 	}
 
 	// 4. Print result.
-	printResult(normalizedHashTypeName, hashValue)
+	printResult(hashValue)
 
 	return rcOK
 }

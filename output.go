@@ -20,13 +20,14 @@
 //
 // Author: Frank Schwab
 //
-// Version: 1.3.0
+// Version: 2.0.0
 //
 // Change history:
 //    2024-12-29: V1.0.0: Created.
 //    2024-12-30: V1.1.0: Print hex bytes directly and not via fmt.Printf.
 //    2025-01-28: V1.2.0: Get rid of "fmt" package.
 //    2025-01-31: V1.3.0: Add Z85 encoding of output.
+//    2025-02-31: V2.0.0: Just print the value. No headers.
 //
 
 package main
@@ -57,38 +58,22 @@ var hexCharBuffer = make([]byte, 1)
 // ******** Private functions ********
 
 // printResult prints the hash value.
-func printResult(normalizedHashTypeName string, hashValue []byte) {
+func printResult(hashValue []byte) {
 	out := os.Stdout
-	if !noHeaders {
-		_, _ = out.WriteString(`Hash  : `)
-	}
-	writeStringln(out, normalizedHashTypeName)
 
 	if useHex {
-		if !noHeaders {
-			_, _ = out.WriteString(`Hex   : `)
-		}
 		printHex(hashValue, separator, prefix, useLower)
 	}
 
 	if useBase32 {
-		if !noHeaders {
-			_, _ = out.WriteString(`Base32: `)
-		}
 		writeStringln(out, base32.StdEncoding.WithPadding(base32.NoPadding).EncodeToString(hashValue))
 	}
 
 	if useBase64 {
-		if !noHeaders {
-			_, _ = out.WriteString(`Base64: `)
-		}
 		writeStringln(out, base64.StdEncoding.WithPadding(base32.NoPadding).EncodeToString(hashValue))
 	}
 
 	if useZ85 {
-		if !noHeaders {
-			_, _ = out.WriteString(`Z85   : `)
-		}
 		encoded, _ := z85.Encode(hashValue)
 		writeStringln(out, encoded)
 	}
