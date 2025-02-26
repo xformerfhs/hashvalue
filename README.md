@@ -11,7 +11,7 @@ Sometimes one needs the hash value of a text or of the contents of a file.
 There are several utilities that can calculate the value of a single hash algorithm.
 The output is mostly just hex bytes.
 
-This utility has been created in order to be able to calculate the values of several hash algorithms with a single program and to get the ouput in several formats.
+This utility has been created in order to be able to calculate the values of several hash algorithms with a single program and to get the output in one of several formats.
 
 ## Call
 
