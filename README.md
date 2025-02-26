@@ -18,7 +18,7 @@ This utility has been created in order to be able to calculate the values of sev
 The program is called like this:
 
 ```
-hashvalue [--hash <algorithm>] {--source <text> | --file <path>} [--hex] [--base16] [--base32] [--base64] [--prefix <text>] [--separator <text>] [--lower | --upper] [--noheader]
+hashvalue [--hash <algorithm>] {--source <text> | --file <path>} [--hex] [--base16] [--base32] [--base64] [--prefix <text>] [--separator <text>] [--lower | --upper]
 ```
 
 The options have the following meaning:
