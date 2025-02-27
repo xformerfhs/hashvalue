@@ -84,7 +84,7 @@ var useUpper bool
 
 // useBase16 indicates that base16 (hex) encoding should be used for hash output.
 // This is a helper flag and is not used for execution control.
-// It is mapped to useHex.
+// It is converted to useHex.
 var useBase16 bool
 
 // useBase32 indicates that base32 encoding should be used for hash output.
@@ -139,9 +139,10 @@ func myUsage() {
 
 // normalizeCommandLineFlags normalizes the command line flags.
 func normalizeCommandLineFlags() {
-	// If "base16" is specified, map it to "hex".
-	if useBase16 {
+	// If "base16" is specified and not "hex", convert it to "hex".
+	if useBase16 && !useHex {
 		useHex = true
+		useBase16 = false
 	}
 
 	// If no encoding is specified, use "hex".
@@ -164,7 +165,7 @@ func checkCommandLineFlags() int {
 
 	flag.Visit(visitOptions)
 
-	if countTrues(useHex, useBase32, useBase64, useZ85) > 1 {
+	if countTrues(useHex, useBase16, useBase32, useBase64, useZ85) > 1 {
 		return printUsageError(`More than one encoding specified`)
 	}
 
