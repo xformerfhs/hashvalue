@@ -104,8 +104,9 @@ var showVersion bool
 
 // ******** Private functions ********
 
-// defineCommandLineFlags defines the command line flags.
-func defineCommandLineFlags() {
+// parseCommandLineWithFlags defines the command line flags and parses the command line.
+func parseCommandLineWithFlags() {
+	// 1. Define flags.
 	flag.StringVar(&hashTypeName, `hash`, `sha3-256`, "name of hash `algorithm`")
 	flag.StringVar(&source, `source`, ``, "Source `text` (mutually exclusive with 'file')")
 	flag.StringVar(&fileName, `file`, ``, "Source file `path` (mutually exclusive with 'source')")
@@ -120,8 +121,10 @@ func defineCommandLineFlags() {
 	flag.BoolVar(&useHex, `hex`, false, `Encode hash in hex (base16) format (default)`)
 	flag.BoolVar(&showVersion, `version`, false, `Show program version and exit`)
 
+	// 2. Set usage function.
 	flag.Usage = myUsage
 
+	// 3. Parse command line.
 	flag.Parse()
 }
 
@@ -132,6 +135,25 @@ func myUsage() {
 	flag.PrintDefaults()
 	_, _ = fmt.Fprintln(errWriter, "\nSpecify only one encoding.")
 	_, _ = fmt.Fprintf(errWriter, "\nValid hash type names: %s\n", hashfactory.KnownHashNames())
+}
+
+// normalizeCommandLineFlags normalizes the command line flags.
+func normalizeCommandLineFlags() {
+	// If "base16" is specified, map it to "hex".
+	if useBase16 {
+		useHex = true
+	}
+
+	// If no encoding is specified, use "hex".
+	if !(useHex || useBase32 || useBase64 || useZ85) {
+		useHex = true
+	}
+
+	// If neither "lower" nor "upper" is specified, use "upper".
+	if !(useLower || useUpper) {
+		useUpper = true
+	}
+
 }
 
 // checkCommandLineFlags checks the command line flags.
@@ -185,21 +207,6 @@ func visitOptions(f *flag.Flag) {
 
 	case `file`:
 		haveFile = true
-	}
-}
-
-// normalizeCommandLineFlags normalizes the command line flags.
-func normalizeCommandLineFlags() {
-	if !(useLower || useUpper) {
-		useUpper = true
-	}
-
-	if useBase16 {
-		useHex = true
-	}
-
-	if !(useHex || useBase32 || useBase64 || useZ85) {
-		useHex = true
 	}
 }
 

@@ -69,7 +69,7 @@ func realMain() int {
 	myName = filehelper.GetRealBaseName(os.Args[0])
 
 	// 1. Define command line flags.
-	defineCommandLineFlags()
+	parseCommandLineWithFlags()
 
 	// Show version and exit if version is requested.
 	if showVersion {
