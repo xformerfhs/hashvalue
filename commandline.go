@@ -198,15 +198,15 @@ func normalizeCommandLineFlags() {
 		useHex = true
 	}
 
-	if !(useBase32 || useBase64 || useZ85 || useHex) {
+	if !(useHex || useBase32 || useBase64 || useZ85) {
 		useHex = true
 	}
 }
 
 // countTrues counts the number of arguments that have a value of "true".
-func countTrues(b ...bool) int {
+func countTrues(v ...bool) int {
 	result := 0
-	for _, b := range b {
+	for _, b := range v {
 		if b {
 			result++
 		}
