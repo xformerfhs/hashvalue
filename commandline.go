@@ -151,7 +151,7 @@ func normalizeCommandLineFlags() {
 	}
 
 	// If neither "lower" nor "upper" is specified, use "upper".
-	if !(useLower || useUpper) {
+	if useHex && !(useLower || useUpper) {
 		useUpper = true
 	}
 
