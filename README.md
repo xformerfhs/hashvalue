@@ -23,21 +23,18 @@ hashvalue [--hash <algorithm>] {--source <text> | --file <path>} [--hex] [--base
 
 The options have the following meaning:
 
-| Option      | Meaning                                                                                                         |
-|-------------|-----------------------------------------------------------------------------------------------------------------|
-| `hash`      | Name of the hash algoritm.                                                                                      |
-| `source`    | Text that is to be hashed (Mutually exclusive with `file`).                                                     |
-| `file`      | File path of a file whose content is to be hashed (mutually exclusive with `source`).                           |
-| `hex`       | Hash value is encoded as a [hexadecimal](https://en.wikipedia.org/wiki/Hexadecimal) (base16) string  (default). |
-| `base16`    | Alias for `hex`.                                                                                                |
-| `base32`    | Hash value is encoded as a [base32](https://en.wikipedia.org/wiki/Base32) string.                               |
-| `base64`    | Hash value is encoded as a [base64](https://en.wikipedia.org/wiki/Base64) string.                               |
-| `z85`       | Hash value is encoded as a [Z85](https://rfc.zeromq.org/spec/32) string.                                        |
-| `prefix`    | Prefix text for hex encoded bytes.  Only used for `hex` encoding.                                               |
-| `separator` | Separator text for hex encoded bytes. Only used for `hex` encoding.                                             |
-| `lower`     | Hexadecimal values `A`-`F` are printed in lower case. Only used for `hex` encoding.                             |
-| `upper`     | Hexadecimal values `A`-`F` are printed in upper case (default). Only used for `hex` encoding.                   |
-| `version`   | Print the version information and exit.                                                                         |
+| Option      | Meaning                                                                                               |
+|-------------|-------------------------------------------------------------------------------------------------------|
+| `hash`      | Name of the hash algoritm.                                                                            |
+| `source`    | Text that is to be hashed (Mutually exclusive with `hexsource` and `file`).                           |
+| `hexsource` | Hexadecimal text that is to be hashed (Mutually exclusive with `source` and `file`).                  |
+| `file`      | File path of a file whose content is to be hashed (mutually exclusive with `source` and `hexsource`). |
+| `encoding`  | Encoding type of hash value (`hex`, `base16`, `base32`, `base64`, or `z85`).                          |
+| `prefix`    | Prefix text for hex encoded bytes.  Only used for `hex` encoding.                                     |
+| `separator` | Separator text for hex encoded bytes. Only used for `hex` encoding.                                   |
+| `lower`     | Hexadecimal values `A`-`F` are printed in lower case. Only used for `hex` encoding.                   |
+| `upper`     | Hexadecimal values `A`-`F` are printed in upper case (default). Only used for `hex` encoding.         |
+| `version`   | Print the version information and exit.                                                               |
 
 The options can be started with either `--` or `-`.
 
@@ -104,7 +101,7 @@ The hash value is printed in hex encoding with upper case letters, since this is
 Now an example with another output encoding:
 
 ```
-hashvalue --source "There should be a meaning." --base32
+hashvalue --source "There should be a meaning." --encoding base32
 ```
 
 This prints the following output:
@@ -129,7 +126,7 @@ The hexadecimal out can be modified, so that it can be incorporated in a program
 E.g. if one wants the hash formatted for use in [Go](https://go.dev/), or [Java](https://www.java.com/), this could be specified like this:
 
 ```
-hashvalue --source "There should be a meaning." --hash sha2-256 --hex --prefix 0x --separator ", "  --lower
+hashvalue --source "There should be a meaning." --hash sha2-256 --encoding hex --prefix 0x --separator ", "  --lower
 ```
 
 This prints the following output:
@@ -141,13 +138,25 @@ This prints the following output:
 And, last, but not least, one can calculate the hash value of a file:
 
 ```
-hashvalue -file main.go --hash sha3-384 --base32
+hashvalue --file main.go --hash sha3-384 --encoding base32
 ```
 
 This prints the following output:
 
 ```
 4KRKAQP4UHQTKMU7T6BZLDIPN4TULQ3WOKR5SCTOIBLRTQH5YRJELPC62FWHI4AEHTGAHIGXEOA7I
+```
+
+It is also possible to calculate the hash value of hexadecimal data:
+
+```
+hashvalue --hexsource 01fe02fd03fc04fa --hash blake2b-256 --encoding base32
+```
+
+This prints the following output:
+
+```
+JNWC2KJZMAIBRBCQIG32SRJA3K3FPLGGVXIGJVAYOT7E7N54TC3A
 ```
 
 ### Return codes
