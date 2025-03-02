@@ -20,7 +20,7 @@
 //
 // Author: Frank Schwab
 //
-// Version: 4.0.0
+// Version: 4.1.0
 //
 // Change history:
 //    2024-12-20: V1.0.0: Created.
@@ -28,6 +28,7 @@
 //    2025-01-28: V2.1.0: Remove "blake2s-128" as it needs a key.
 //    2025-02-05: V3.0.0: New package name.
 //    2025-02-26: V4.0.0: No longer return normalized hash type name.
+//    2025-03-02: V4.1.0: Removed conversion no longer necessary.
 //
 
 // Package hashfactory implements the hash factory functions.
@@ -43,7 +44,6 @@ import (
 	"golang.org/x/crypto/sha3"
 	"hash"
 	"slices"
-	"strings"
 )
 
 // ******** Private variables ********
@@ -55,9 +55,7 @@ var hashTypeMap = make(map[string]func() hash.Hash)
 
 // New creates a hash function from the hash type name.
 func New(hashTypeName string) (hash.Hash, bool) {
-	normalizedHashTypeName := strings.ToLower(strings.TrimSpace(hashTypeName))
-
-	hashCreationFunction, ok := hashTypeMap[normalizedHashTypeName]
+	hashCreationFunction, ok := hashTypeMap[hashTypeName]
 
 	if ok {
 		return hashCreationFunction(), ok

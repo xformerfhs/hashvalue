@@ -20,7 +20,7 @@
 //
 // Author: Frank Schwab
 //
-// Version: 2.0.0
+// Version: 3.0.0
 //
 // Change history:
 //    2024-12-20: V1.0.0: Created.
@@ -33,6 +33,7 @@
 //    2025-02-05: V1.4.1: Simpler Z85 size calculation.
 //    2025-02-15: V1.4.2: Use z85 package from GitHub.
 //    2025-02-26: V2.0.0: Just print the value in one encoding. No headers. No multiple encodings.
+//    2025-03-02: V3.0.0: New command line structure. Ability to specify hex bytes.
 //
 
 package main
@@ -52,7 +53,7 @@ func main() {
 // ******** Private constants ********
 
 // myVersion contains the current version of this program.
-const myVersion = `2.0.0`
+const myVersion = `3.0.0`
 
 // myCopyright contains the copyright of this program.
 const myCopyright = `Copyright (c) 2024-2025 Frank Schwab`
@@ -81,7 +82,7 @@ func realMain() int {
 	normalizeCommandLineFlags()
 
 	// 3. Check for command line errors.
-	rc := checkCommandLineFlags()
+	encodedPrinter, rc := checkCommandLineFlags()
 	if rc != rcOK {
 		return rc
 	}
@@ -93,13 +94,13 @@ func realMain() int {
 	}
 
 	// 3. Hash data.
-	hashValue, err := hashData(hashFunc, source, fileName)
+	hashValue, err := hashData(hashFunc, sourceBytes, fileName)
 	if err != nil {
 		return printErrorf(`Error hashing data: %s`, err)
 	}
 
 	// 4. Print result.
-	printResult(hashValue)
+	encodedPrinter.PrintEncoded(hashValue)
 
 	return rcOK
 }

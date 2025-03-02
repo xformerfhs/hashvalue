@@ -1,5 +1,5 @@
 //
-// SPDX-FileCopyrightText: Copyright 2024-2025 Frank Schwab
+// SPDX-FileCopyrightText: Copyright 2025 Frank Schwab
 //
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -20,24 +20,24 @@
 //
 // Author: Frank Schwab
 //
-// Version: 2.0.0
+// Version: 1.0.0
 //
 // Change history:
-//    2024-12-29: V1.0.0: Created.
-//    2024-12-30: V1.1.0: Print hex bytes directly and not via fmt.Printf.
-//    2025-01-28: V1.2.0: Get rid of "fmt" package.
-//    2025-01-31: V1.3.0: Add Z85 encoding of output.
-//    2025-02-31: V2.0.0: Just print the value. No headers.
+//    2025-03-02: V1.0.0: Created.
 //
 
-package main
+package encodedprinting
 
 import (
-	"encoding/base32"
-	"encoding/base64"
-	"github.com/xformerfhs/z85"
 	"os"
 )
+
+// HexEncoder is used to encode bytes in hex encoding.
+type HexEncoder struct {
+	separator  []byte
+	prefix     []byte
+	caseOffset byte
+}
 
 // ******** Private constants ********
 
@@ -47,65 +47,43 @@ const lowerOffset byte = 'a' - 'A'
 // characterOffset is the offset between a digit character and an alphabetical character.
 const characterOffset byte = 'A' - '9' - 1
 
-// newLine contains a byte slice with the newline character.
-var newLine = []byte{'\n'}
-
-// ******** Private variables ********
-
 // hexCharBuffer is the one byte slice that holds the byte to print as a hex character.
 var hexCharBuffer = make([]byte, 1)
 
-// ******** Private functions ********
-
-// printResult prints the hash value.
-func printResult(hashValue []byte) {
-	out := os.Stdout
-
-	if useHex {
-		printHex(hashValue, separator, prefix, useLower)
-	}
-
-	if useBase32 {
-		writeStringln(out, base32.StdEncoding.WithPadding(base32.NoPadding).EncodeToString(hashValue))
-	}
-
-	if useBase64 {
-		writeStringln(out, base64.StdEncoding.WithPadding(base32.NoPadding).EncodeToString(hashValue))
-	}
-
-	if useZ85 {
-		encoded, _ := z85.Encode(hashValue)
-		writeStringln(out, encoded)
-	}
-}
-
-// printHex prints a byte array in hex format where the bytes are separated
-// by separator and prefixed by prefix. The byte values are printed either with
-// lower or upper case characters, depending on useLower.
-func printHex(hashValue []byte, separator string, prefix string, useLower bool) {
+// NewHexEncoder creates a new hexadecimal encoder.
+func NewHexEncoder(separator string, prefix string, useLower bool) *HexEncoder {
 	caseOffset := characterOffset
 	if useLower {
 		caseOffset += lowerOffset
 	}
 
-	separatorBytes := []byte(separator)
-	prefixBytes := []byte(prefix)
+	return &HexEncoder{
+		separator:  []byte(separator),
+		prefix:     []byte(prefix),
+		caseOffset: caseOffset,
+	}
+}
+
+// PrintEncoded prints a byte array in hex format where the bytes are separated
+// by separator and prefixed by prefix. The byte values are printed either with
+// lower or upper case characters, depending on useLower.
+func (e *HexEncoder) PrintEncoded(hashValue []byte) {
 	out := os.Stdout
 
 	useSeparator := false
-	usePrefix := len(prefix) != 0
+	usePrefix := len(e.prefix) != 0
 	for _, b := range hashValue {
 		if useSeparator {
-			_, _ = out.Write(separatorBytes)
+			_, _ = out.Write(e.separator)
 		} else {
 			useSeparator = true
 		}
 
 		if usePrefix {
-			_, _ = out.Write(prefixBytes)
+			_, _ = out.Write(e.prefix)
 		}
 
-		printHexByte(b, caseOffset)
+		printHexByte(b, e.caseOffset)
 	}
 
 	_, _ = out.Write(newLine)
@@ -137,10 +115,4 @@ func printHexChar(b byte, caseOffset byte) {
 
 	// 4. Write the byte to the Stdout writer.
 	_, _ = os.Stdout.Write(hexCharBuffer)
-}
-
-// writeStringln writes a string followed by a newline character.
-func writeStringln(out *os.File, s string) {
-	_, _ = out.WriteString(s)
-	_, _ = out.Write(newLine)
 }

@@ -26,14 +26,19 @@
 //    2024-12-29: V1.0.0: Created.
 //    2025-01-31: V1.1.0: Add Z85 encoding of output.
 //    2025-02-26: V2.0.0: No more headers. Allow only one encoding.
+//    2025-03-02: V3.0.0: New command line structure. Ability to process hex bytes.
 //
 
 package main
 
 import (
+	"encoding/hex"
 	"flag"
 	"fmt"
+	"hashvalue/encodedprinting"
 	"hashvalue/hashfactory"
+	"hashvalue/stringhelper"
+	"strings"
 )
 
 // ******** Private constants ********
@@ -44,12 +49,18 @@ const parameterTooLongErrorFormat = `%s is too long`
 // maxHexParameterLen is the maximum length for a hex formatting parameter.
 const maxHexParameterLen = 8
 
+// errFmtIsEmpty is the error string for an empty variable.
+const errFmtIsEmpty = `%s is empty`
+
 // ******** Private variables ********
 
 // Option presence flags.
 
 // haveSource is true if the 'source' option has been set.
 var haveSource = false
+
+// haveHexSource is true if the 'hexsource' option has been set.
+var haveHexSource = false
 
 // haveFile is true if the 'file' option has been set.
 var haveFile = false
@@ -65,8 +76,14 @@ var hashTypeName string
 // source is the source text to hash.
 var source string
 
+// hexSource is the source text to hash in hex encoding.
+var hexSource string
+
 // fileName is the name of the file whose contents are to be hashed.
 var fileName string
+
+// encodingType specifies the output encoding to use.
+var encodingType string
 
 // separator is the separator text for hex output.
 var separator string
@@ -82,25 +99,11 @@ var useLower bool
 // It is mapped to useLower.
 var useUpper bool
 
-// useBase16 indicates that base16 (hex) encoding should be used for hash output.
-// This is a helper flag and is not used for execution control.
-// It is converted to useHex.
-var useBase16 bool
-
-// useBase32 indicates that base32 encoding should be used for hash output.
-var useBase32 bool
-
-// useBase64 indicates that base64 encoding should be used for hash output.
-var useBase64 bool
-
-// useZ85 indicates that Z85 encoding should be used for hash output.
-var useZ85 bool
-
-// useHex indicates that hex encoding should be used for hash output.
-var useHex bool
-
 // showVersion indicates that the version information should be printed.
 var showVersion bool
+
+// sourceBytes contains the bytes of the source.
+var sourceBytes []byte
 
 // ******** Private functions ********
 
@@ -108,18 +111,15 @@ var showVersion bool
 func parseCommandLineWithFlags() {
 	// 1. Define flags.
 	flag.StringVar(&hashTypeName, `hash`, `sha3-256`, "name of hash `algorithm`")
-	flag.StringVar(&source, `source`, ``, "Source `text` (mutually exclusive with 'file')")
-	flag.StringVar(&fileName, `file`, ``, "Source file `path` (mutually exclusive with 'source')")
+	flag.StringVar(&source, `source`, ``, "Source `text` (mutually exclusive with 'hexsource' and 'file')")
+	flag.StringVar(&hexSource, `hexsource`, ``, "Hexadecimal source `text` (mutually exclusive with 'source' and 'file')")
+	flag.StringVar(&fileName, `file`, ``, "Source file `path` (mutually exclusive with 'source' and 'hexsource')")
+	flag.StringVar(&encodingType, `encoding`, `hex`, "Encoding `type` of hash value (one of 'hex', 'base16', 'base32', 'base64', or 'z85')")
 	flag.StringVar(&separator, `separator`, ``, "Separator `text` between hex bytes")
 	flag.StringVar(&prefix, `prefix`, ``, "Prefix `text` in front of hex bytes")
+	flag.BoolVar(&showVersion, `version`, false, `Show program version and exit`)
 	flag.BoolVar(&useLower, `lower`, false, `Use lower case for hex output`)
 	flag.BoolVar(&useUpper, `upper`, false, `Use upper case for hex output (default)`)
-	flag.BoolVar(&useBase16, `base16`, false, `Encode hash in base16 (hex) format (alias for 'hex')`)
-	flag.BoolVar(&useBase32, `base32`, false, `Encode hash in base32 format`)
-	flag.BoolVar(&useBase64, `base64`, false, `Encode hash in base64 format`)
-	flag.BoolVar(&useZ85, `z85`, false, `Encode hash in Z85 format`)
-	flag.BoolVar(&useHex, `hex`, false, `Encode hash in hex (base16) format (default)`)
-	flag.BoolVar(&showVersion, `version`, false, `Show program version and exit`)
 
 	// 2. Set usage function.
 	flag.Usage = myUsage
@@ -139,65 +139,91 @@ func myUsage() {
 
 // normalizeCommandLineFlags normalizes the command line flags.
 func normalizeCommandLineFlags() {
-	// If "base16" is specified and not "hex", convert it to "hex".
-	if useBase16 && !useHex {
-		useHex = true
-		useBase16 = false
+	// Normalize encoding type.
+	if len(encodingType) > 0 {
+		encodingType = strings.ToLower(strings.TrimSpace(encodingType))
 	}
 
-	// If no encoding is specified, use "hex".
-	if !(useHex || useBase32 || useBase64 || useZ85) {
-		useHex = true
+	if len(encodingType) == 0 || encodingType == `base16` {
+		encodingType = `hex`
 	}
 
-	// If neither "lower" nor "upper" is specified with "hex", use "upper".
-	if useHex && !(useLower || useUpper) {
-		useUpper = true
+	// Normalize hex source.
+	if len(hexSource) > 0 {
+		hexSource = stringhelper.RemoveAllWhitespace(hexSource)
 	}
 
+	// Normalize hash type name.
+	if len(hashTypeName) > 0 {
+		hashTypeName = strings.ToLower(strings.TrimSpace(hashTypeName))
+	}
+
+	// File name is *not* normalized as a file name may end or start with blanks.
+
+	// Separator and prefix are not normalized as they are always processed as they are.
 }
 
 // checkCommandLineFlags checks the command line flags.
-func checkCommandLineFlags() int {
+func checkCommandLineFlags() (encodedprinting.EncodedPrinter, int) {
 	if flag.NArg() > 0 {
-		return printUsageErrorf(`Arguments without flags present: %s`, flag.Args())
+		return nil, printUsageErrorf(`Arguments without flags present: %s`, flag.Args())
 	}
 
 	flag.Visit(visitOptions)
 
-	if countTrues(useHex, useBase16, useBase32, useBase64, useZ85) > 1 {
-		return printUsageError(`More than one encoding specified`)
+	numSources := countTrues(haveSource, haveHexSource, haveFile)
+
+	if numSources == 0 {
+		return nil, printUsageError(`Specify either 'source', 'hexsource' or 'file'`)
 	}
 
-	if haveSource && haveFile {
-		return printUsageError(`Do not specify 'source' and 'file'`)
+	if numSources > 1 {
+		return nil, printUsageError(`Specify only one of 'source', 'hexsource' or 'file'`)
 	}
 
-	if !(haveSource || haveFile) {
-		return printUsageError(`Specify either 'source' or 'file'`)
+	if haveSource {
+		if len(source) != 0 {
+			sourceBytes = stringhelper.UnsafeStringBytes(source)
+		} else {
+			return nil, printUsageErrorf(errFmtIsEmpty, `Source`)
+		}
 	}
 
-	if haveSource && len(source) == 0 {
-		return printUsageError(`Source is empty`)
+	if haveHexSource {
+		if len(hexSource) != 0 {
+			var err error
+			sourceBytes, err = hex.DecodeString(hexSource)
+
+			if err != nil {
+				return nil, printUsageErrorf(`Invalid hex string: %v`, err)
+			}
+		} else {
+			return nil, printUsageErrorf(errFmtIsEmpty, `Hex source`)
+		}
 	}
 
 	if haveFile && len(fileName) == 0 {
-		return printUsageError(`File name is empty`)
+		return nil, printUsageErrorf(errFmtIsEmpty, `File name`)
+	}
+
+	encodedPrinter, isValid := encodingTypeToPrinter(encodingType)
+	if !isValid {
+		return nil, printUsageErrorf(`Invalid encoding type '%s'`, encodingType)
 	}
 
 	if len(separator) > maxHexParameterLen {
-		return printUsageErrorf(parameterTooLongErrorFormat, `separator`)
+		return nil, printUsageErrorf(parameterTooLongErrorFormat, `separator`)
 	}
 
 	if len(prefix) > maxHexParameterLen {
-		return printUsageErrorf(parameterTooLongErrorFormat, `prefix`)
+		return nil, printUsageErrorf(parameterTooLongErrorFormat, `prefix`)
 	}
 
 	if useLower && useUpper {
-		return printUsageError(`Specify either 'lower' or 'upper'`)
+		return nil, printUsageError(`Specify either 'lower' or 'upper'`)
 	}
 
-	return rcOK
+	return encodedPrinter, rcOK
 }
 
 // visitOptions is the visitor function that checks which options have been set.
@@ -205,6 +231,9 @@ func visitOptions(f *flag.Flag) {
 	switch f.Name {
 	case `source`:
 		haveSource = true
+
+	case `hexsource`:
+		haveHexSource = true
 
 	case `file`:
 		haveFile = true
@@ -221,4 +250,24 @@ func countTrues(v ...bool) int {
 	}
 
 	return result
+}
+
+// encodingTypeToPrinter converts the encoding type to a printer.
+func encodingTypeToPrinter(encodingType string) (encodedprinting.EncodedPrinter, bool) {
+	switch encodingType {
+	case `hex`, `base16`:
+		return encodedprinting.NewHexEncoder(separator, prefix, useLower), true
+
+	case `base32`:
+		return encodedprinting.NewBase32Encoder(), true
+
+	case `base64`:
+		return encodedprinting.NewBase64Encoder(), true
+
+	case `z85`:
+		return encodedprinting.NewZ85Encoder(), true
+
+	default:
+		return nil, false
+	}
 }
