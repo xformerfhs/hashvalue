@@ -29,6 +29,7 @@
 package encodedprinting
 
 import (
+	"hashvalue/stringhelper"
 	"os"
 )
 
@@ -58,8 +59,8 @@ func NewHexEncoder(separator string, prefix string, useLower bool) *HexEncoder {
 	}
 
 	return &HexEncoder{
-		separator:  []byte(separator),
-		prefix:     []byte(prefix),
+		separator:  stringhelper.UnsafeStringBytes(separator),
+		prefix:     stringhelper.UnsafeStringBytes(prefix),
 		caseOffset: caseOffset,
 	}
 }
