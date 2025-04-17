@@ -20,7 +20,7 @@
 //
 // Author: Frank Schwab
 //
-// Version: 4.1.0
+// Version: 4.2.0
 //
 // Change history:
 //    2024-12-20: V1.0.0: Created.
@@ -28,7 +28,8 @@
 //    2025-01-28: V2.1.0: Remove "blake2s-128" as it needs a key.
 //    2025-02-05: V3.0.0: New package name.
 //    2025-02-26: V4.0.0: No longer return normalized hash type name.
-//    2025-03-02: V4.1.0: Removed conversion no longer necessary.
+//    2025-03-02: V4.1.0: Remove conversion no longer necessary.
+//    2025-04-17: V4.2.0: Change names from "hash type" to "hash algorithm".
 //
 
 // Package hashfactory implements the hash factory functions.
@@ -48,14 +49,14 @@ import (
 
 // ******** Private variables ********
 
-// hashTypeMap maps the hash type name to the hash creation function.
-var hashTypeMap = make(map[string]func() hash.Hash)
+// hashAlgorithmNameToFunction maps the hash algorithm name to the hash creation function.
+var hashAlgorithmNameToFunction = make(map[string]func() hash.Hash)
 
 // ******** Public functions ********
 
-// New creates a hash function from the hash type name.
-func New(hashTypeName string) (hash.Hash, bool) {
-	hashCreationFunction, ok := hashTypeMap[hashTypeName]
+// New creates a hash function from the hash algorithm name.
+func New(hashAlgorithm string) (hash.Hash, bool) {
+	hashCreationFunction, ok := hashAlgorithmNameToFunction[hashAlgorithm]
 
 	if ok {
 		return hashCreationFunction(), ok
@@ -66,8 +67,8 @@ func New(hashTypeName string) (hash.Hash, bool) {
 
 // KnownHashNames returns an array of valid known names.
 func KnownHashNames() []string {
-	result := make([]string, 0, len(hashTypeMap))
-	for name := range hashTypeMap {
+	result := make([]string, 0, len(hashAlgorithmNameToFunction))
+	for name := range hashAlgorithmNameToFunction {
 		result = append(result, name)
 	}
 
@@ -80,22 +81,22 @@ func KnownHashNames() []string {
 
 // init is the package initialization function.
 func init() {
-	hashTypeMap[`md5`] = md5.New
-	hashTypeMap[`sha1`] = sha1.New
-	hashTypeMap[`sha2-224`] = sha256.New224
-	hashTypeMap[`sha2-256`] = sha256.New
-	hashTypeMap[`sha2-384`] = sha512.New384
-	hashTypeMap[`sha2-512`] = sha512.New
-	hashTypeMap[`sha2-512_224`] = sha512.New512_224
-	hashTypeMap[`sha2-512_256`] = sha512.New512_256
-	hashTypeMap[`sha3-224`] = sha3.New224
-	hashTypeMap[`sha3-256`] = sha3.New256
-	hashTypeMap[`sha3-384`] = sha3.New384
-	hashTypeMap[`sha3-512`] = sha3.New512
-	hashTypeMap[`blake2b-256`] = newBlake2b_256
-	hashTypeMap[`blake2b-384`] = newBlake2b_384
-	hashTypeMap[`blake2b-512`] = newBlake2b_512
-	hashTypeMap[`blake2s-256`] = newBlake2s_256
+	hashAlgorithmNameToFunction[`md5`] = md5.New
+	hashAlgorithmNameToFunction[`sha1`] = sha1.New
+	hashAlgorithmNameToFunction[`sha2-224`] = sha256.New224
+	hashAlgorithmNameToFunction[`sha2-256`] = sha256.New
+	hashAlgorithmNameToFunction[`sha2-384`] = sha512.New384
+	hashAlgorithmNameToFunction[`sha2-512`] = sha512.New
+	hashAlgorithmNameToFunction[`sha2-512_224`] = sha512.New512_224
+	hashAlgorithmNameToFunction[`sha2-512_256`] = sha512.New512_256
+	hashAlgorithmNameToFunction[`sha3-224`] = sha3.New224
+	hashAlgorithmNameToFunction[`sha3-256`] = sha3.New256
+	hashAlgorithmNameToFunction[`sha3-384`] = sha3.New384
+	hashAlgorithmNameToFunction[`sha3-512`] = sha3.New512
+	hashAlgorithmNameToFunction[`blake2b-256`] = newBlake2b_256
+	hashAlgorithmNameToFunction[`blake2b-384`] = newBlake2b_384
+	hashAlgorithmNameToFunction[`blake2b-512`] = newBlake2b_512
+	hashAlgorithmNameToFunction[`blake2s-256`] = newBlake2s_256
 }
 
 // -------- Hash helper functions --------

@@ -20,7 +20,7 @@
 //
 // Author: Frank Schwab
 //
-// Version: 3.0.0
+// Version: 4.0.0
 //
 // Change history:
 //    2024-12-20: V1.0.0: Created.
@@ -34,6 +34,7 @@
 //    2025-02-15: V1.4.2: Use z85 package from GitHub.
 //    2025-02-26: V2.0.0: Just print the value in one encoding. No headers. No multiple encodings.
 //    2025-03-02: V3.0.0: New command line structure. Ability to specify hex bytes.
+//    2025-04-17: V4.0.0: No default hash algorithm.
 //
 
 package main
@@ -53,7 +54,7 @@ func main() {
 // ******** Private constants ********
 
 // myVersion contains the current version of this program.
-const myVersion = `3.0.0`
+const myVersion = `4.0.0`
 
 // myCopyright contains the copyright of this program.
 const myCopyright = `Copyright (c) 2024-2025 Frank Schwab`
@@ -88,9 +89,9 @@ func realMain() int {
 	}
 
 	// 4. Get hash function.
-	hashFunc, ok := hashfactory.New(hashTypeName)
+	hashFunc, ok := hashfactory.New(hashAlgorithm)
 	if !ok {
-		return printUsageErrorf(`Invalid hash type: '%s'`, hashTypeName)
+		return printUsageErrorf(`Invalid hash algorithm: '%s'`, hashAlgorithm)
 	}
 
 	// 3. Hash data.

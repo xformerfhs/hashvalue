@@ -25,7 +25,7 @@ The options have the following meaning:
 
 | Option      | Meaning                                                                                               |
 |-------------|-------------------------------------------------------------------------------------------------------|
-| `hash`      | Name of the hash algoritm.                                                                            |
+| `hash`      | Name of the hash algorithm.                                                                           |
 | `source`    | Text that is to be hashed (Mutually exclusive with `hexsource` and `file`).                           |
 | `hexsource` | Hexadecimal text that is to be hashed (Mutually exclusive with `source` and `file`).                  |
 | `file`      | File path of a file whose content is to be hashed (mutually exclusive with `source` and `hexsource`). |
@@ -39,7 +39,7 @@ The options have the following meaning:
 The options can be started with either `--` or `-`.
 
 Specify only one encoding.
-If there is more than one encoding specified an error message is printed.
+If there is more than one encoding specified, an error message is printed.
 
 The hash algorithm names consist up to three parts:
 
@@ -79,14 +79,14 @@ The list of supported hash algorithms is as follows:
 - `sha3-384`
 - `sha3-512`
 
-If the program is called without arguments or with wrong arguments a usage text is printed.
+If the program is called without arguments or with wrong arguments, a usage text is printed.
 
 ### Examples
 
 In the first example a simple text is hashed:
 
 ```
-hashvalue --source "There should be a meaning."
+hashvalue --source "There should be a meaning." --hash sha3-256
 ```
 
 This prints the following output:
@@ -95,13 +95,12 @@ This prints the following output:
 9AFA63F5C5BE4BEFEC3D1499470F255EDEDCE0B02B916564111886DCD72597CD
 ```
 
-If the algorithm is not specified the default is `sha3-256`.
 The hash value is printed in hex encoding with upper case letters, since this is the default if no encoding is specified.
 
 Now an example with another output encoding:
 
 ```
-hashvalue --source "There should be a meaning." --encoding base32
+hashvalue --source "There should be a meaning." --hash sha3-256 --encoding base32
 ```
 
 This prints the following output:
@@ -110,7 +109,7 @@ This prints the following output:
 TL5GH5OFXZF673B5CSMUODZFL3PNZYFQFOIWKZARDCDNZVZFS7GQ
 ```
 
-The hash value is the same as before but now it is printed in base32 encoding.
+The hash value is the same as before, but now it is printed in base32 encoding.
 
 Now a different hash algorithm is specified:
 
@@ -122,8 +121,8 @@ hashvalue --source "There should be a meaning." --z85 --hash blake2b-384
 Xov:#>ia!Rpp[?j9%J]O]&8o8q:EM-h9PwW}RH88&XoG=jNnzgT0<E<7l8$2
 ```
 
-The hexadecimal out can be modified, so that it can be incorporated in a program source code.
-E.g. if one wants the hash formatted for use in [Go](https://go.dev/), or [Java](https://www.java.com/), this could be specified like this:
+If the output type is hexadecimal, it can be modified so that it can be incorporated in a program source code.
+E.g., if one wants the hash formatted for use in [Go](https://go.dev/), or [Java](https://www.java.com/), this could be specified like this:
 
 ```
 hashvalue --source "There should be a meaning." --hash sha2-256 --encoding hex --prefix 0x --separator ", "  --lower

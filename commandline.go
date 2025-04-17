@@ -20,13 +20,14 @@
 //
 // Author: Frank Schwab
 //
-// Version: 2.0.0
+// Version: 3.1.0
 //
 // Change history:
 //    2024-12-29: V1.0.0: Created.
 //    2025-01-31: V1.1.0: Add Z85 encoding of output.
 //    2025-02-26: V2.0.0: No more headers. Allow only one encoding.
 //    2025-03-02: V3.0.0: New command line structure. Ability to process hex bytes.
+//    2025-04-17: V3.1.0: Change "hash type" to "hash algorithm". No default hash algorithm.
 //
 
 package main
@@ -70,8 +71,8 @@ var haveFile = false
 // They have to be global in order to modularize the main program.
 // Otherwise, there would have been an awful lot of parameters to pass to functions.
 
-// hashTypeName is the name of the hash.
-var hashTypeName string
+// hashAlgorithm is the name of the hash.
+var hashAlgorithm string
 
 // source is the source text to hash.
 var source string
@@ -110,7 +111,7 @@ var sourceBytes []byte
 // parseCommandLineWithFlags defines the command line flags and parses the command line.
 func parseCommandLineWithFlags() {
 	// 1. Define flags.
-	flag.StringVar(&hashTypeName, `hash`, `sha3-256`, "name of hash `algorithm`")
+	flag.StringVar(&hashAlgorithm, `hash`, ``, "name of hash `algorithm`")
 	flag.StringVar(&source, `source`, ``, "Source `text` (mutually exclusive with 'hexsource' and 'file')")
 	flag.StringVar(&hexSource, `hexsource`, ``, "Hexadecimal source `text` (mutually exclusive with 'source' and 'file')")
 	flag.StringVar(&fileName, `file`, ``, "Source file `path` (mutually exclusive with 'source' and 'hexsource')")
@@ -128,13 +129,13 @@ func parseCommandLineWithFlags() {
 	flag.Parse()
 }
 
-// myUsage is the function that is called by flag.Usage. It prints the usage information.
+// myUsage is the function called by flag.Usage. It prints the usage information.
 func myUsage() {
 	errWriter := flag.CommandLine.Output()
 	_, _ = fmt.Fprintf(errWriter, "\nUse '%s' with the following options:\n\n", myName)
 	flag.PrintDefaults()
 	_, _ = fmt.Fprintln(errWriter, "\nSpecify only one encoding.")
-	_, _ = fmt.Fprintf(errWriter, "\nValid hash type names: %s\n", hashfactory.KnownHashNames())
+	_, _ = fmt.Fprintf(errWriter, "\nValid hash algorithm names: %s\n", hashfactory.KnownHashNames())
 }
 
 // normalizeCommandLineFlags normalizes the command line flags.
@@ -153,9 +154,9 @@ func normalizeCommandLineFlags() {
 		hexSource = stringhelper.RemoveAllWhitespace(hexSource)
 	}
 
-	// Normalize hash type name.
-	if len(hashTypeName) > 0 {
-		hashTypeName = strings.ToLower(strings.TrimSpace(hashTypeName))
+	// Normalize hash algorithm name.
+	if len(hashAlgorithm) > 0 {
+		hashAlgorithm = strings.ToLower(strings.TrimSpace(hashAlgorithm))
 	}
 
 	// File name is *not* normalized as a file name may end or start with blanks.
@@ -167,6 +168,10 @@ func normalizeCommandLineFlags() {
 func checkCommandLineFlags() (encodedprinting.EncodedPrinter, int) {
 	if flag.NArg() > 0 {
 		return nil, printUsageErrorf(`Arguments without flags present: %s`, flag.Args())
+	}
+
+	if len(hashAlgorithm) == 0 {
+		return nil, printUsageError(`No hash algorithm specified`)
 	}
 
 	flag.Visit(visitOptions)
