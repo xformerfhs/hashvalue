@@ -35,6 +35,7 @@
 //    2025-02-26: V2.0.0: Just print the value in one encoding. No headers. No multiple encodings.
 //    2025-03-02: V3.0.0: New command line structure. Ability to specify hex bytes.
 //    2025-04-17: V4.0.0: No default hash algorithm.
+//    2025-09-22: V5.0.0: Option renamed from "hash" to "algorithm".
 //
 
 package main
@@ -54,7 +55,7 @@ func main() {
 // ******** Private constants ********
 
 // myVersion contains the current version of this program.
-const myVersion = `4.0.0`
+const myVersion = `5.0.0`
 
 // myCopyright contains the copyright of this program.
 const myCopyright = `Copyright (c) 2024-2025 Frank Schwab`

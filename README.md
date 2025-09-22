@@ -18,14 +18,14 @@ This utility has been created in order to be able to calculate the values of sev
 The program is called like this:
 
 ```
-hashvalue [--hash <algorithm>] {--source <text> | --file <path>} [--hex] [--base16] [--base32] [--base64] [--prefix <text>] [--separator <text>] [--lower | --upper]
+hashvalue [--algorithm <algorithm>] {--source <text> | --file <path>} [--hex] [--base16] [--base32] [--base64] [--prefix <text>] [--separator <text>] [--lower | --upper]
 ```
 
 The options have the following meaning:
 
 | Option      | Meaning                                                                                               |
 |-------------|-------------------------------------------------------------------------------------------------------|
-| `hash`      | Name of the hash algorithm.                                                                           |
+| `algorithm` | Name of the hash algorithm.                                                                           |
 | `source`    | Text that is to be hashed (Mutually exclusive with `hexsource` and `file`).                           |
 | `hexsource` | Hexadecimal text that is to be hashed (Mutually exclusive with `source` and `file`).                  |
 | `file`      | File path of a file whose content is to be hashed (mutually exclusive with `source` and `hexsource`). |
@@ -86,7 +86,7 @@ If the program is called without arguments or with wrong arguments, a usage text
 In the first example a simple text is hashed:
 
 ```
-hashvalue --source "There should be a meaning." --hash sha3-256
+hashvalue --source "There should be a meaning." --algorithm sha3-256
 ```
 
 This prints the following output:
@@ -100,7 +100,7 @@ The hash value is printed in hex encoding with upper case letters, since this is
 Now an example with another output encoding:
 
 ```
-hashvalue --source "There should be a meaning." --hash sha3-256 --encoding base32
+hashvalue --source "There should be a meaning." --algorithm sha3-256 --encoding base32
 ```
 
 This prints the following output:
@@ -114,7 +114,7 @@ The hash value is the same as before, but now it is printed in base32 encoding.
 Now a different hash algorithm is specified:
 
 ```
-hashvalue --source "There should be a meaning." --z85 --hash blake2b-384
+hashvalue --source "There should be a meaning." --z85 --algorithm blake2b-384
 ```
 
 ```
@@ -125,7 +125,7 @@ If the output type is hexadecimal, it can be modified so that it can be incorpor
 E.g., if one wants the hash formatted for use in [Go](https://go.dev/), or [Java](https://www.java.com/), this could be specified like this:
 
 ```
-hashvalue --source "There should be a meaning." --hash sha2-256 --encoding hex --prefix 0x --separator ", "  --lower
+hashvalue --source "There should be a meaning." --algorithm sha2-256 --encoding hex --prefix 0x --separator ", "  --lower
 ```
 
 This prints the following output:
@@ -137,7 +137,7 @@ This prints the following output:
 And, last, but not least, one can calculate the hash value of a file:
 
 ```
-hashvalue --file main.go --hash sha3-384 --encoding base32
+hashvalue --file main.go --algorithm sha3-384 --encoding base32
 ```
 
 This prints the following output:
@@ -149,7 +149,7 @@ This prints the following output:
 It is also possible to calculate the hash value of hexadecimal data:
 
 ```
-hashvalue --hexsource 01fe02fd03fc04fa --hash blake2b-256 --encoding base32
+hashvalue --hexsource 01fe02fd03fc04fa --algorithm blake2b-256 --encoding base32
 ```
 
 This prints the following output:

@@ -111,7 +111,7 @@ var sourceBytes []byte
 // parseCommandLineWithFlags defines the command line flags and parses the command line.
 func parseCommandLineWithFlags() {
 	// 1. Define flags.
-	flag.StringVar(&hashAlgorithm, `hash`, ``, "name of hash `algorithm`")
+	flag.StringVar(&hashAlgorithm, `algorithm`, ``, "`name` of hash algorithm")
 	flag.StringVar(&source, `source`, ``, "Source `text` (mutually exclusive with 'hexsource' and 'file')")
 	flag.StringVar(&hexSource, `hexsource`, ``, "Hexadecimal source `text` (mutually exclusive with 'source' and 'file')")
 	flag.StringVar(&fileName, `file`, ``, "Source file `path` (mutually exclusive with 'source' and 'hexsource')")
